@@ -71,7 +71,7 @@ BEGIN
     BEGIN
         IF (alu_en = '1') THEN
 
-            IF temp(31 DOWNTO 0) = x"0000" THEN
+            IF temp(31 DOWNTO 0) = x"00000000" THEN
                 Zero <= '1';
             ELSE
                 Zero <= '0';

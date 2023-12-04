@@ -1,0 +1,21 @@
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+USE IEEE.NUMERIC_STD.ALL;
+
+ENTITY EX_stage IS
+    PORT (
+        MemtoReg,reset : IN STD_LOGIC;
+        ALU_out, MEM_out : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+        Result : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+    );
+END EX_stage;
+
+ARCHITECTURE arch_EX_stage OF EX_stage IS
+BEGIN
+
+    Result <= x"00000000" WHEN reset = '1' ELSE ALU_out WHEN MemtoReg = '0' ELSE
+        MEM_OUT;
+
+END arch_EX_stage;
