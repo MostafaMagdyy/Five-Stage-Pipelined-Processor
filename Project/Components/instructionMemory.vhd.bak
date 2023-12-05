@@ -2,8 +2,8 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.STD_LOGIC_UNSIGNED.ALL;
 USE IEEE.numeric_std.ALL;
-USE IEEE.STD_LOGIC_textio.ALL;
 USE std.textio.ALL;
+
 ENTITY InstructionMemory IS
     PORT (
         clk : IN STD_LOGIC;
@@ -11,9 +11,27 @@ ENTITY InstructionMemory IS
         instruction : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
     );
 END InstructionMemory;
+
+CONSTANT ram_depth : NATURAL := 4095;
+CONSTANT ram_width : NATURAL := 16;
+TYPE ram_type IS ARRAY (0 TO ram_depth - 1) OF STD_LOGIC_VECTOR(ram_width - 1 DOWNTO 0);
+
+FUNCTION init_ram_bin RETURN ram_type IS
+    FILE text_file : TEXT OPEN read_mode IS "test.txt";
+    VARIABLE text_line : LINE;
+    VARIABLE ram_content : ram_type;
+    VARIABLE value : STD_LOGIC_VECTOR(ram_width - 1 DOWNTO 0);
+BEGIN
+    FOR i IN 0 TO ram_depth - 1 LOOP
+        readline(text_file, text_line);
+        read(text_line, value); -- Assuming binary values are in ASCII format in the file
+        ram_content(i) := value;
+    END LOOP;
+    RETURN ram_content;
+END FUNCTION;
 ARCHITECTURE Behavioral OF InstructionMemory IS
     TYPE InstructionMemoryArray IS ARRAY (0 TO 4095) OF STD_LOGIC_VECTOR(15 DOWNTO 0);
-    SIGNAL memory : InstructionMemoryArray;
+    SIGNAL memory : InstructionMemoryArray := init_ram_bin;
     -- --    SIGNAL memory : InstructionMemoryArray := ( // initialization for testing
     --     0 => "0000000000000000",
     --     1 => "1101111110111111",

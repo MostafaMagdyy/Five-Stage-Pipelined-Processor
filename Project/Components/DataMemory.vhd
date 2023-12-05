@@ -11,7 +11,8 @@ ENTITY DataMemory IS
         data_in : IN STD_LOGIC_VECTOR(31 DOWNTO 0); -- Data input (32-bit)
         write_enable : IN STD_LOGIC; -- Write enable signal
         read_enable : IN STD_LOGIC; -- Read enable signal
-        data_out : OUT STD_LOGIC_VECTOR(31 DOWNTO 0) -- Data output (32-bit)
+        data_out : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);-- Data output (32-bit)
+        protect_sig : IN STD_LOGIC
     );
 END DataMemory;
 
@@ -29,12 +30,11 @@ ARCHITECTURE Behavioral OF DataMemory IS
     SIGNAL MemoryProtection : MemoryProtectionArray := (
         OTHERS => '0'
     );
-
 BEGIN
     PROCESS (clk)
     BEGIN
         IF falling_edge(clk) THEN
-            IF (write_enable = '1' AND MemoryProtection(to_integer(unsigned(address))) = '1') THEN
+            IF (write_enable = '1' AND MemoryProtection(to_integer(unsigned(address))) = '0') THEN
                 -- Big endian: store memory in the highest bits
                 memory(to_integer(unsigned(address - 1))) <= data_in(15 DOWNTO 0);
                 memory(to_integer(unsigned(address))) <= data_in(31 DOWNTO 16);
@@ -43,7 +43,10 @@ BEGIN
                 data_out(15 DOWNTO 0) <= memory(to_integer(unsigned(address - 1)));
                 data_out(31 DOWNTO 16) <= memory(to_integer(unsigned(address)));
                 -- To continue reading
+            ELSIF protect_sig = '1' THEN
+                MemoryProtection(to_integer(unsigned(address))) <= '1';
             END IF;
         END IF;
+
     END PROCESS;
 END Behavioral;
