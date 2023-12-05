@@ -1,0 +1,18 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
+
+ENTITY vector_to_unsigned IS
+    GENERIC (
+        vector_width : NATURAL := 12
+    );
+    PORT (
+        vector_in : IN STD_LOGIC_VECTOR(vector_width - 1 DOWNTO 0);
+        unsigned_out : OUT unsigned(11 DOWNTO 0)
+    );
+END;
+
+ARCHITECTURE behavioral OF vector_to_unsigned IS
+BEGIN
+    unsigned_out <= (vector_in, vector_width);
+END;

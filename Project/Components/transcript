@@ -1,0 +1,106 @@
+# Reading C:/intelFPGA/18.1/modelsim_ase/tcl/vsim/pref.tcl
+# OpenFile M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd
+vlib work
+vcom -reportprogress 300 -work work M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 01:28:46 on Dec 04,2023
+# vcom -reportprogress 300 -work work M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package STD_LOGIC_UNSIGNED
+# -- Compiling entity InstructionMemory_TB
+# -- Compiling architecture Behavioral of InstructionMemory_TB
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd(31): (vcom-1600) No feasible entries for subprogram "read".
+#    Visible subprograms are:
+#       (implicit) TEXTIO.read[std.TEXTIO.TEXT, std.STANDARD.STRING, INTEGER] at $MODEL_TECH/../vhdl_src/std/textio.vhd(15)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, BIT, BOOLEAN] at $MODEL_TECH/../vhdl_src/std/textio.vhd(64)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, BIT] at $MODEL_TECH/../vhdl_src/std/textio.vhd(66)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, BIT_VECTOR, BOOLEAN] at $MODEL_TECH/../vhdl_src/std/textio.vhd(68)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, BIT_VECTOR] at $MODEL_TECH/../vhdl_src/std/textio.vhd(70)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, BOOLEAN, BOOLEAN] at $MODEL_TECH/../vhdl_src/std/textio.vhd(72)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, BOOLEAN] at $MODEL_TECH/../vhdl_src/std/textio.vhd(74)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, std.STANDARD.CHARACTER, BOOLEAN] at $MODEL_TECH/../vhdl_src/std/textio.vhd(76)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, std.STANDARD.CHARACTER] at $MODEL_TECH/../vhdl_src/std/textio.vhd(78)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, INTEGER, BOOLEAN] at $MODEL_TECH/../vhdl_src/std/textio.vhd(80)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, INTEGER] at $MODEL_TECH/../vhdl_src/std/textio.vhd(82)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, std.STANDARD.REAL, BOOLEAN] at $MODEL_TECH/../vhdl_src/std/textio.vhd(84)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, std.STANDARD.REAL] at $MODEL_TECH/../vhdl_src/std/textio.vhd(86)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, std.STANDARD.STRING, BOOLEAN] at $MODEL_TECH/../vhdl_src/std/textio.vhd(88)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, std.STANDARD.STRING] at $MODEL_TECH/../vhdl_src/std/textio.vhd(90)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, std.STANDARD.TIME, BOOLEAN] at $MODEL_TECH/../vhdl_src/std/textio.vhd(92)
+#       (explicit) TEXTIO.READ[std.TEXTIO.LINE, std.STANDARD.TIME] at $MODEL_TECH/../vhdl_src/std/textio.vhd(94)
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd(34): Illegal target for signal assignment.
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd(34): (vcom-1136) Unknown identifier "memory".
+# ** Error: (vcom-11) Could not find work.instructionmemory.
+# ** Error (suppressible): M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd(60): (vcom-1195) Cannot find expanded name "work.InstructionMemory".
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd(60): Unknown expanded name.
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd(16): Variable declaration 'file_line' not allowed in this region.
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd(17): Variable declaration 'data_value' not allowed in this region.
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd(18): Variable declaration 'file_opened' not allowed in this region.
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory_tb.vhd(67): VHDL Compiler exiting
+# End time: 01:28:46 on Dec 04,2023, Elapsed time: 0:00:00
+# Errors: 10, Warnings: 0
+vcom -reportprogress 300 -work work M:/CPU-Architecture/Project/Components/instructionMemory.vhd
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 01:28:47 on Dec 04,2023
+# vcom -reportprogress 300 -work work M:/CPU-Architecture/Project/Components/instructionMemory.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package STD_LOGIC_UNSIGNED
+# -- Compiling entity InstructionMemory
+# -- Compiling architecture Behavioral of InstructionMemory
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory.vhd(20): (vcom-1136) Unknown identifier "to_integer".
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory.vhd(24): VHDL Compiler exiting
+# End time: 01:28:47 on Dec 04,2023, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+vsim work.instructionmemory
+# vsim work.instructionmemory 
+# Start time: 01:29:02 on Dec 04,2023
+# Loading std.standard
+# ** Error: (vsim-3173) Entity 'M:/CPU-Architecture/Project/Components/work.instructionmemory' has no architecture.
+# Error loading design
+# End time: 01:29:02 on Dec 04,2023, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
+vcom -reportprogress 300 -work work M:/CPU-Architecture/Project/Components/instructionMemory.vhd
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 01:29:34 on Dec 04,2023
+# vcom -reportprogress 300 -work work M:/CPU-Architecture/Project/Components/instructionMemory.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package STD_LOGIC_UNSIGNED
+# -- Compiling entity InstructionMemory
+# -- Compiling architecture Behavioral of InstructionMemory
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory.vhd(20): (vcom-1136) Unknown identifier "to_integer".
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory.vhd(24): VHDL Compiler exiting
+# End time: 01:29:34 on Dec 04,2023, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+vsim work.instructionmemory
+# vsim work.instructionmemory 
+# Start time: 01:30:45 on Dec 04,2023
+# Loading std.standard
+# ** Error: (vsim-3173) Entity 'M:/CPU-Architecture/Project/Components/work.instructionmemory' has no architecture.
+# Error loading design
+# End time: 01:30:46 on Dec 04,2023, Elapsed time: 0:00:01
+# Errors: 1, Warnings: 0
+vcom -work work M:/CPU-Architecture/Project/Components/instructionMemory.vhd
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 01:30:50 on Dec 04,2023
+# vcom -reportprogress 300 -work work M:/CPU-Architecture/Project/Components/instructionMemory.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package std_logic_arith
+# -- Loading package STD_LOGIC_UNSIGNED
+# -- Compiling entity InstructionMemory
+# -- Compiling architecture Behavioral of InstructionMemory
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory.vhd(20): (vcom-1136) Unknown identifier "to_integer".
+# ** Error: M:/CPU-Architecture/Project/Components/instructionMemory.vhd(24): VHDL Compiler exiting
+# End time: 01:30:50 on Dec 04,2023, Elapsed time: 0:00:00
+# Errors: 2, Warnings: 0
+# C:/intelFPGA/18.1/modelsim_ase/win32aloem/vcom failed.
