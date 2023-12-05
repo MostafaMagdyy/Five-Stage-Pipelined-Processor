@@ -30,7 +30,7 @@ begin
             Registers(5) <= x"00000006";
             Registers(6) <= x"00000007";
             Registers(7) <= x"00000008";
-        elsif rising_edge(Clk) then
+        elsif falling_edge(Clk) then
             -- Write operation
             if RegWrite = '1' then
                 Registers(to_integer(unsigned(WriteRegister))) <= WriteData;
