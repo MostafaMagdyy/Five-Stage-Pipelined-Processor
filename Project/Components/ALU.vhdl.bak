@@ -1,0 +1,62 @@
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+ENTITY alu_32bit IS
+    PORT (
+        A, B : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+        ALUOp : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+        Result : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
+        Zero, Carry, Neg : OUT STD_LOGIC);
+END alu_32bit;
+
+ARCHITECTURE arch_alu_32bit OF alu_32bit IS
+    SIGNAL temp : STD_LOGIC_VECTOR(32 DOWNTO 0);
+    SIGNAL carry_out : STD_LOGIC;
+BEGIN
+    PROCESS (A, B, ALUOp)
+    BEGIN
+        CASE ALUOp IS
+            WHEN "000" =>
+                -- Addition
+                temp <= ('0' & A) + ('0' & B);
+                Result <= temp(31 DOWNTO 0);
+
+            WHEN "001" =>
+                -- Subtraction
+                temp <= ('0' & A) - ('0' & B);
+                Result <= temp(31 DOWNTO 0);
+
+            WHEN "010" =>
+                -- AND operation
+                Result <= A AND B;
+
+            WHEN "011" =>
+                -- OR operation
+                Result <= A OR B;
+
+            WHEN "100" =>
+                -- XOR operation
+                Result <= A XOR B;
+
+            WHEN OTHERS =>
+                -- Other operations (you can add more as needed)
+                Result <= (OTHERS => '0');
+        END CASE;
+
+        -- Check if the result is zero
+        IF temp(31 downto 0) = (OTHERS =>'0') THEN
+            -- Zero <= '1';
+        ELSE
+            -- Zero <= '0';
+        END IF;
+        -- Carry out (for addition)
+        carry_out <= temp(32);
+
+        -- Negative flag
+        Neg <= temp(31);
+    END PROCESS;
+
+    Carry <= carry_out;
+END arch_alu_32bit;
