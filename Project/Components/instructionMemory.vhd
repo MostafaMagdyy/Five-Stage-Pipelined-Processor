@@ -12,20 +12,32 @@ ENTITY InstructionMemory IS
     );
 END InstructionMemory;
 ARCHITECTURE Behavioral OF InstructionMemory IS
-    TYPE InstructionMemoryArray IS ARRAY (0 TO 4095) OF STD_LOGIC_VECTOR(15 DOWNTO 0);
-    SIGNAL memory : InstructionMemoryArray;
-    -- --    SIGNAL memory : InstructionMemoryArray := ( // initialization for testing
-    --     0 => "0000000000000000",
-    --     1 => "1101111110111111",
-    --     2 => "1001101111011111",
-    --     3 => "1110001111111111"
-    -- );
+    TYPE InstructionMemoryArray IS ARRAY (0 TO 15) OF STD_LOGIC_VECTOR(15 DOWNTO 0);
+    -- SIGNAL memory : InstructionMemoryArray := (OTHERS => (OTHERS => '0'));
+    SIGNAL memory : InstructionMemoryArray := (--// initialization for testing
+    0 => "0101101001001100",--//or
+    1 => "1010011100000110",--ldd
+    2 => "0000000000000000",--EA
+    3 => "0000000000000000",-- NOP
+    4 => "0000000000000000",--dec reg 7
+    5 => "0000000000000000",
+    6 => "0000000000000000",
+    7 => "0010011111101100",
+    8 => "0000000000000000",
+    9 => "0000000000000000",
+    10 => "0000000000000000",
+    11 => "0000000000000000",
+    12 => "1011000000000000",
+    13 => "0000000000000000",
+    14 => "0000000000000000",
+    15 => "0000000000000000"
+    );
 BEGIN
-    PROCESS (clk)
-    BEGIN
-        IF rising_edge(clk) THEN
-            instruction <= memory(to_integer(unsigned((address))));
-        END IF;
-    END PROCESS;
+    -- PROCESS (clk)
+    -- BEGIN
+    --     IF rising_edge(clk) THEN
+    --     END IF;
+    --     END PROCESS;
+    instruction <= memory(to_integer(unsigned((address))));
 
 END Behavioral;

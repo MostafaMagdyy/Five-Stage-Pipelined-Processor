@@ -1,0 +1,19 @@
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.numeric_std.ALL;
+ENTITY control_unit IS
+    PORT (
+        rst : IN STD_LOGIC;
+        clk : IN STD_LOGIC;
+        IN_PORT : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+        OUT_PORT : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+    );
+END control_unit;
+
+ARCHITECTURE control_unit_arc OF control_unit IS
+    SIGNAL instruction : STD_LOGIC_VECTOR(15 DOWNTO 0);
+BEGIN
+
+    instruction_memory : ENTITY work.InstructionMemory PORT MAP (clk => clk, address => x"001", instruction => instruction);
+
+END control_unit_arc;

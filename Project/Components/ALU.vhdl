@@ -60,7 +60,7 @@ BEGIN
 
                 WHEN OTHERS =>
                     -- Other operations (you can add more as needed)
-                    Result <= (OTHERS => '0');
+                    -- Result <= (OTHERS => '0');
             END CASE;
 
             -- Check if the result is zero
@@ -80,7 +80,7 @@ BEGIN
             carry_out <= temp(32);
 
             -- Negative flag
-            Neg <= temp(32);
+            Neg <= temp(31);
 
             result <= temp (31 DOWNTO 0);
 

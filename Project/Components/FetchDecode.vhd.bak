@@ -1,7 +1,7 @@
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.STD_LOGIC_UNSIGNED.ALL;
-USE IEEE.numeric_std.ALL;
+USE IEEE.numeric_std.ALL;
 ENTITY FethcDecode IS
     PORT (
         clk : IN STD_LOGIC;
@@ -22,7 +22,7 @@ BEGIN
             R_dest <= instruction(10 DOWNTO 8);
             R_src1 <= instruction(7 DOWNTO 5);
             R_src2 <= instruction(4 DOWNTO 2);
-            Extra_EFA <= instruction(4 DOWNTO 1);
+            Extra_EFA <= instruction(7 DOWNTO 4);
         END IF;
     END PROCESS;
 
