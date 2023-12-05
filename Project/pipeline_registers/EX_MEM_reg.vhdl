@@ -11,6 +11,7 @@ ENTITY EX_MEM_Reg IS
 
         MemRead_E : IN STD_LOGIC;
         MemWrite_E : IN STD_LOGIC;
+        Protect_E : IN STD_LOGIC;
         MemToReg_E : IN STD_LOGIC;
         RegWrite_E : IN STD_LOGIC;
         Branch_E : IN STD_LOGIC;
@@ -23,6 +24,7 @@ ENTITY EX_MEM_Reg IS
 
         MemRead_M : OUT STD_LOGIC;
         MemWrite_M : OUT STD_LOGIC;
+        Protect_M : OUT STD_LOGIC;
         MemToReg_M : OUT STD_LOGIC;
         RegWrite_M : OUT STD_LOGIC;
         Branch_M : OUT STD_LOGIC
@@ -41,6 +43,7 @@ BEGIN
 
             MemRead_M <= '0';
             MemWrite_M <= '0';
+            Protect_M <= '0';
             MemToReg_M <= '0';
             RegWrite_M <= '0';
             Branch_M <= '0';
@@ -52,6 +55,7 @@ BEGIN
 
             MemRead_M <= MemRead_E;
             MemWrite_M <= MemWrite_E;
+            Protect_M <= Protect_E;
             MemToReg_M <= MemToReg_E;
             RegWrite_M <= RegWrite_E;
             Branch_M <= Branch_E;

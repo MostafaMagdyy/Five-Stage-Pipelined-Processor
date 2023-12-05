@@ -9,6 +9,7 @@ ENTITY ID_EX_Reg IS
         AluOP_D : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
         MemRead_D : IN STD_LOGIC;
         MemWrite_D : IN STD_LOGIC;
+        Protect_D : IN STD_LOGIC;
         MemToReg_D : IN STD_LOGIC;
         RegWrite_D : IN STD_LOGIC;
         Branch_D : IN STD_LOGIC;
@@ -23,6 +24,7 @@ ENTITY ID_EX_Reg IS
         AluOP_E : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
         MemRead_E : OUT STD_LOGIC;
         MemWrite_E : OUT STD_LOGIC;
+        Protect_E : OUT STD_LOGIC;
         MemToReg_E : OUT STD_LOGIC;
         RegWrite_E : OUT STD_LOGIC;
         Branch_E : OUT STD_LOGIC;
@@ -41,6 +43,7 @@ BEGIN
             AluOP_E <= (OTHERS => '0');
             MemRead_E <= '0';
             MemWrite_E <= '0';
+            Protect_E <= '0';
             MemToReg_E <= '0';
             RegWrite_E <= '0';
             Branch_E <= '0';
@@ -53,6 +56,7 @@ BEGIN
             AluOP_E <= AluOP_D;
             MemRead_E <= MemRead_D;
             MemWrite_E <= MemWrite_D;
+            Protect_E <= Protect_D;
             MemToReg_E <= MemToReg_D;
             RegWrite_E <= RegWrite_D;
             Branch_E <= Branch_D;
