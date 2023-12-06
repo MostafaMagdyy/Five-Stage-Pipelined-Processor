@@ -3,7 +3,7 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 
 PACKAGE my_pkg IS
-TYPE memory_array IS ARRAY(NATURAL RANGE <>) OF STD_LOGIC_VECTOR;
+    TYPE memory_array IS ARRAY(NATURAL RANGE <>) OF STD_LOGIC_VECTOR;
 END PACKAGE;
 USE work.my_pkg.ALL;
 LIBRARY ieee;
@@ -15,7 +15,7 @@ USE std.textio.ALL;
 
 ENTITY instruction_memory_initialization IS
     PORT (
-        ram : OUT memory_array(0 TO 4095)(15 DOWNTO 0)
+        ram : OUT memory_array(0 TO 4095)(15 DOWNTO 0) := (OTHERS => (OTHERS => '0'))
     );
 END ENTITY;
 ARCHITECTURE arch_memory_initialization OF instruction_memory_initialization IS
@@ -27,7 +27,7 @@ BEGIN
         VARIABLE temp_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
     BEGIN
 
-        FOR i IN ram'RANGE  LOOP
+        FOR i IN ram'RANGE LOOP
             IF NOT endfile(memory_file) THEN
                 readline(memory_file, file_line);
                 read(file_line, temp_data);

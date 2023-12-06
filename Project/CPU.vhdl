@@ -14,6 +14,7 @@ ARCHITECTURE CPU_arc OF CPU IS
 
     SIGNAL PC : STD_LOGIC_VECTOR (31 DOWNTO 0) := (OTHERS => '0');
     SIGNAL instruction : STD_LOGIC_VECTOR(15 DOWNTO 0);
+    SIGNAL instruction_D : STD_LOGIC_VECTOR(15 DOWNTO 0);
 
     SIGNAL op_code : STD_LOGIC_VECTOR(4 DOWNTO 0);
     SIGNAL R_dest : STD_LOGIC_VECTOR(2 DOWNTO 0);
@@ -84,18 +85,21 @@ ARCHITECTURE CPU_arc OF CPU IS
 
 BEGIN
 
-    PROCESS (clk)
+    PROCESS (clk, rst)
     BEGIN
-        IF (rising_edge(clk)) THEN
+        IF (rst = '1') THEN
+            PC <= (OTHERS => '0');
+        ELSIF (rising_edge(clk)) THEN
             PC <= STD_LOGIC_VECTOR(unsigned(PC) + 1);
         END IF;
     END PROCESS;
     --
 
-    ControlReset <= '1' WHEN ALUsrc_E = '1' ELSE
+    ControlReset <= '1' WHEN ALUsrc_E = '1' OR rst = '1' ELSE
         '0';
     instruction_memory : ENTITY work.InstructionMemory PORT MAP (address => PC (11 DOWNTO 0), instruction => instruction);
-    IF_ID : ENTITY work.FethcDecode PORT MAP(clk => clk, instruction => instruction, op_code => op_code, R_dest => R_dest, R_src1 => R_src1, R_src2 => R_src2, Extra_EFA => Extra_EFA);
+    IF_ID : ENTITY work.FethcDecode PORT MAP(rst => rst, clk => clk, instruction => instruction, instruction_out => instruction_D
+        , op_code => op_code, R_dest => R_dest, R_src1 => R_src1, R_src2 => R_src2, Extra_EFA => Extra_EFA);
     RegWriteData <= AluOut_WB WHEN MemToReg_WB = '0' ELSE
         MemOut_WB;
 
