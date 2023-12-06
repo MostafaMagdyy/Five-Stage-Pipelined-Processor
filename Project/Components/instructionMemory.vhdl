@@ -14,7 +14,7 @@ ENTITY InstructionMemory IS
     );
 END InstructionMemory;
 ARCHITECTURE Behavioral OF InstructionMemory IS
-    SIGNAL memory : memory_array (4095 DOWNTO 0)(15 DOWNTO 0);
+    SIGNAL memory : memory_array (0 to 4095)(15 DOWNTO 0);
 BEGIN
     initmemory : ENTITY work.instruction_memory_initialization   PORT MAP (ram => memory);
     instruction <= memory(to_integer(unsigned((address))));

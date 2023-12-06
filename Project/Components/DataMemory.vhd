@@ -20,21 +20,19 @@ END DataMemory;
 ARCHITECTURE Behavioral OF DataMemory IS
     TYPE MemoryProtectionArray IS ARRAY (0 TO 4095) OF STD_LOGIC; -- Renamed PROTECTEDMemory to MemoryProtectionArray
     -- SIGNAL memory : MemoryArray := (OTHERS => (OTHERS => '0'));
-    SIGNAL memory_init : memory_array (4095 DOWNTO 0)(15 DOWNTO 0);
-    SIGNAL memory : memory_array (4095 DOWNTO 0)(15 DOWNTO 0);
+    SIGNAL memory_init : memory_array (0 TO 4095)(15 DOWNTO 0);
+    SIGNAL memory : memory_array (0 TO 4095)(15 DOWNTO 0) := (OTHERS => (OTHERS => '0'));
     SIGNAL MemoryProtection : MemoryProtectionArray := (
         OTHERS => '0'
     );
 BEGIN
     initmemory : ENTITY work.data_memory_initialization PORT MAP (ram => memory_init);
-    PROCESS (rst)BEGIN
-        IF (rst = '1') THEN
-            memory <= memory_init;  
-        END IF;
-    END PROCESS;
-    PROCESS (clk)
+
+    PROCESS (clk, rst)
     BEGIN
-        IF falling_edge(clk) THEN
+        IF (rst = '1') THEN
+            memory <= memory_init;
+        ELSIF falling_edge(clk) THEN
             IF (write_enable = '1' AND MemoryProtection(to_integer(unsigned(address))) = '0') THEN
                 -- Big endian: store memory in the highest bits
                 memory(to_integer(unsigned(address - 1))) <= data_in(15 DOWNTO 0);

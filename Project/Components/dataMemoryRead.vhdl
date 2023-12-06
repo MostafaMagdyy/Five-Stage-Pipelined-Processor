@@ -12,7 +12,7 @@ USE std.textio.ALL;
 
 ENTITY data_memory_initialization IS
     PORT (
-        ram : OUT memory_array(0 TO 4095)(15 DOWNTO 0)
+        ram : OUT memory_array(0 TO 4095)(15 DOWNTO 0):= (OTHERS => (OTHERS => '0'))
     );
 END ENTITY;
 ARCHITECTURE data_memory_initialization OF data_memory_initialization IS
@@ -24,7 +24,7 @@ BEGIN
         VARIABLE temp_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
     BEGIN
 
-        FOR i IN 4095 downto 0  LOOP
+        FOR i IN ram'RANGE LOOP
             IF NOT endfile(memory_file) THEN
                 readline(memory_file, file_line);
                 read(file_line, temp_data);

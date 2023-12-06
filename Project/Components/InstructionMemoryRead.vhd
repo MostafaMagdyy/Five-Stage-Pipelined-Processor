@@ -27,7 +27,7 @@ BEGIN
         VARIABLE temp_data : STD_LOGIC_VECTOR(15 DOWNTO 0);
     BEGIN
 
-        FOR i IN 4095 downto 0  LOOP
+        FOR i IN ram'RANGE  LOOP
             IF NOT endfile(memory_file) THEN
                 readline(memory_file, file_line);
                 read(file_line, temp_data);
