@@ -2,9 +2,11 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.STD_LOGIC_UNSIGNED.ALL;
 USE IEEE.numeric_std.ALL;
+USE work.my_pkg.ALL;
 
 ENTITY DataMemory IS
     PORT (
+        rst : IN STD_LOGIC;
         clk : IN STD_LOGIC;
         address : IN STD_LOGIC_VECTOR(11 DOWNTO 0);
         data_in : IN STD_LOGIC_VECTOR(31 DOWNTO 0); -- Data input (32-bit)
@@ -16,20 +18,20 @@ ENTITY DataMemory IS
 END DataMemory;
 
 ARCHITECTURE Behavioral OF DataMemory IS
-    TYPE MemoryArray IS ARRAY (0 TO 3) OF STD_LOGIC_VECTOR(15 DOWNTO 0); -- 4 KB memory with 16-bit words
     TYPE MemoryProtectionArray IS ARRAY (0 TO 4095) OF STD_LOGIC; -- Renamed PROTECTEDMemory to MemoryProtectionArray
     -- SIGNAL memory : MemoryArray := (OTHERS => (OTHERS => '0'));
-    SIGNAL memory : MemoryArray := (
-        0 => "0000000000000001",
-        1 => "0000000000000010",
-        2 => "0000000000000011",
-        3 => "0000000000000100"
-    );
-
+    SIGNAL memory_init : memory_array (4095 DOWNTO 0)(15 DOWNTO 0);
+    SIGNAL memory : memory_array (4095 DOWNTO 0)(15 DOWNTO 0);
     SIGNAL MemoryProtection : MemoryProtectionArray := (
         OTHERS => '0'
     );
 BEGIN
+    initmemory : ENTITY work.data_memory_initialization PORT MAP (ram => memory_init);
+    PROCESS (rst)BEGIN
+        IF (rst = '1') THEN
+            memory <= memory_init;  
+        END IF;
+    END PROCESS;
     PROCESS (clk)
     BEGIN
         IF falling_edge(clk) THEN
@@ -49,6 +51,3 @@ BEGIN
 
     END PROCESS;
 END Behavioral;
-
-
-

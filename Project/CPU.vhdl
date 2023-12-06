@@ -94,7 +94,7 @@ BEGIN
 
     ControlReset <= '1' WHEN ALUsrc_E = '1' ELSE
         '0';
-    instruction_memory : ENTITY work.InstructionMemory PORT MAP (clk => clk, address => PC (11 DOWNTO 0), instruction => instruction);
+    instruction_memory : ENTITY work.InstructionMemory PORT MAP (address => PC (11 DOWNTO 0), instruction => instruction);
     IF_ID : ENTITY work.FethcDecode PORT MAP(clk => clk, instruction => instruction, op_code => op_code, R_dest => R_dest, R_src1 => R_src1, R_src2 => R_src2, Extra_EFA => Extra_EFA);
     RegWriteData <= AluOut_WB WHEN MemToReg_WB = '0' ELSE
         MemOut_WB;
@@ -128,7 +128,7 @@ BEGIN
         MemToReg_M => MemToReg_M, RegWrite_M => RegWrite_M, Branch_M => Branch_M
         );
 
-    DataMemory : ENTITY work.DataMemory PORT MAP(clk => clk, address => EA_M(11 DOWNTO 0), data_in => x"00000000",
+    DataMemory : ENTITY work.DataMemory PORT MAP(rst => rst, clk => clk, address => EA_M(11 DOWNTO 0), data_in => x"00000000",
         write_enable => MemWrite_M, read_enable => MemRead_M, data_out => data_out, protect_sig => Protect_M
         );
 
