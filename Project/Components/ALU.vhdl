@@ -14,7 +14,7 @@ ENTITY alu_32bit IS
 END alu_32bit;
 
 ARCHITECTURE arch_alu_32bit OF alu_32bit IS
-    SIGNAL temp : STD_LOGIC_VECTOR(32 DOWNTO 0);
+    SIGNAL temp : STD_LOGIC_VECTOR(32 DOWNTO 0) := (OTHERS => '0');
     SIGNAL carry_out : STD_LOGIC;
 BEGIN
     PROCESS (alu_en, A, B, ALUOp)
@@ -57,7 +57,9 @@ BEGIN
                 WHEN "1011" =>
                     -- RCR
                     -- temp <= ('0' & A) + ('0' & B);
-
+                WHEN "1101" =>
+                    -- out A
+                    temp <= ('0' & A);
                 WHEN OTHERS =>
                     -- Other operations (you can add more as needed)
                     -- Result <= (OTHERS => '0');

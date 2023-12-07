@@ -13,6 +13,7 @@ ENTITY ID_EX_Reg IS
         MemToReg_D : IN STD_LOGIC;
         RegWrite_D : IN STD_LOGIC;
         Branch_D : IN STD_LOGIC;
+        OUT_D : IN STD_LOGIC;
         Rsrc1_D : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
         Rsrc2_D : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
         extra_EA_D : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
@@ -28,6 +29,7 @@ ENTITY ID_EX_Reg IS
         MemToReg_E : OUT STD_LOGIC;
         RegWrite_E : OUT STD_LOGIC;
         Branch_E : OUT STD_LOGIC;
+        OUT_E : OUT STD_LOGIC;
         Rsrc1_E : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
         Rsrc2_E : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
         extra_EA_E : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
@@ -47,6 +49,7 @@ BEGIN
             MemToReg_E <= '0';
             RegWrite_E <= '0';
             Branch_E <= '0';
+            OUT_E <= '0';
             Rsrc1_E <= (OTHERS => '0');
             Rsrc2_E <= (OTHERS => '0');
             extra_EA_E <= (OTHERS => '0');
@@ -60,6 +63,7 @@ BEGIN
             MemToReg_E <= MemToReg_D;
             RegWrite_E <= RegWrite_D;
             Branch_E <= Branch_D;
+            OUT_E <= OUT_D;
             Rsrc1_E <= Rsrc1_D;
             Rsrc2_E <= Rsrc2_D;
             extra_EA_E <= extra_EA_D;

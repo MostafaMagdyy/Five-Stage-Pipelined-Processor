@@ -6,7 +6,7 @@ ENTITY CPU IS
         rst : IN STD_LOGIC;
         clk : IN STD_LOGIC;
         IN_PORT : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-        OUT_PORT : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+        OUT_PORT : OUT STD_LOGIC_VECTOR(31 DOWNTO 0) := (OTHERS => '0')
     );
 END CPU;
 
@@ -34,6 +34,7 @@ ARCHITECTURE CPU_arc OF CPU IS
     SIGNAL MemtoReg : STD_LOGIC;
     SIGNAL RegWrite : STD_LOGIC;
     SIGNAL Branch : STD_LOGIC;
+    SIGNAL OUT_D : STD_LOGIC;
     SIGNAL Protect : STD_LOGIC;
 
     SIGNAL ControlReset : STD_LOGIC;
@@ -48,6 +49,7 @@ ARCHITECTURE CPU_arc OF CPU IS
     SIGNAL MemToReg_E : STD_LOGIC;
     SIGNAL RegWrite_E : STD_LOGIC;
     SIGNAL Branch_E : STD_LOGIC;
+    SIGNAL OUT_E : STD_LOGIC;
     SIGNAL Rsrc1_E : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL Rsrc2_E : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL extra_EA_E : STD_LOGIC_VECTOR(3 DOWNTO 0);
@@ -69,6 +71,9 @@ ARCHITECTURE CPU_arc OF CPU IS
     SIGNAL RegWrite_M : STD_LOGIC;
     SIGNAL Branch_M : STD_LOGIC;
 
+    --
+    SIGNAL memory_address : STD_LOGIC_VECTOR (11 DOWNTO 0);
+
     SIGNAL EA_E_in : STD_LOGIC_VECTOR(19 DOWNTO 0);
     --data memory
     SIGNAL data_out : STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -89,9 +94,14 @@ BEGIN
     BEGIN
         IF (rst = '1') THEN
             PC <= (OTHERS => '0');
+            OUT_PORT <= (OTHERS => '0');
         ELSIF (rising_edge(clk)) THEN
             PC <= STD_LOGIC_VECTOR(unsigned(PC) + 1);
+            IF (out_E = '1') THEN
+                OUT_PORT <= Rsrc1_E;
+            END IF;
         END IF;
+
     END PROCESS;
     --
 
@@ -108,21 +118,22 @@ BEGIN
         ReadRegister2 => R_src2, ReadData1 => ReadData1_D, ReadData2 => ReadData2_D);
     Control_unit : ENTITY work.control_unit PORT MAP (Rst => ControlReset, OpCode => op_code,
         AluSrc => AluSrc, AluOpCode => AluOpCode, MemRead => MemRead, MemWrite => MemWrite,
-        MemtoReg => MemtoReg, RegWrite => RegWrite, Branch => Branch, Protect => Protect
+        MemtoReg => MemtoReg, RegWrite => RegWrite, Branch => Branch, Protect => Protect,
+        OutPort => OUT_D
         );
     ID_EX : ENTITY work.ID_EX_Reg PORT MAP(en => '1', clk => clk, rst => rst,
         ALUsrc_D => AluSrc, AluOP_D => AluOpCode, MemRead_D => MemRead, MemWrite_D => MemWrite,
         Protect_D => Protect, MemToReg_D => MemtoReg, RegWrite_D => RegWrite, Branch_D => Branch,
-        Rsrc1_D => ReadData1_D, Rsrc2_D => ReadData2_D, extra_EA_D => Extra_EFA, Rdst_D => R_dest,
+        OUT_D => OUT_D, Rsrc1_D => ReadData1_D, Rsrc2_D => ReadData2_D, extra_EA_D => Extra_EFA, Rdst_D => R_dest,
         ALUsrc_E => ALUsrc_E, AluOP_E => AluOP_E, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
         Protect_E => Protect_E, MemToReg_E => MemToReg_E, RegWrite_E => RegWrite_E, Branch_E => Branch_E,
-        Rsrc1_E => Rsrc1_E, Rsrc2_E => Rsrc2_E, extra_EA_E => extra_EA_E, Rdst_E => Rdst_E
+        OUT_E => OUT_E, Rsrc1_E => Rsrc1_E, Rsrc2_E => Rsrc2_E, extra_EA_E => extra_EA_E, Rdst_E => Rdst_E
         );
 
     ALU : ENTITY work.alu_32bit PORT MAP(reset => rst, alu_en => '1', A => Rsrc1_E, B => Rsrc2_E,
         ALUOp => AluOP_E, Result => Result, Zero => Zero, Carry => Carry, Neg => Neg
         );
-    EA_E_in <= instruction & extra_EA_E;
+    EA_E_in <= instruction_D & extra_EA_E;
 
     EX_MEM : ENTITY work.EX_MEM_Reg PORT MAP(en => '1', clk => clk, rst => rst, Rdst_E => Rdst_E, AluOut_E => Result,
         EA_E => EA_E_in, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E, Protect_E => Protect_E,
@@ -132,7 +143,10 @@ BEGIN
         MemToReg_M => MemToReg_M, RegWrite_M => RegWrite_M, Branch_M => Branch_M
         );
 
-    DataMemory : ENTITY work.DataMemory PORT MAP(rst => rst, clk => clk, address => EA_M(11 DOWNTO 0), data_in => x"00000000",
+    memory_address <= AluOut_M(11 DOWNTO 0) WHEN Protect_M = '1' ELSE
+        EA_M (11 DOWNTO 0);
+
+    DataMemory : ENTITY work.DataMemory PORT MAP(rst => rst, clk => clk, address => memory_address, data_in => x"00000000",
         write_enable => MemWrite_M, read_enable => MemRead_M, data_out => data_out, protect_sig => Protect_M
         );
 
