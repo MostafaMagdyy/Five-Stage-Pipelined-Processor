@@ -11,7 +11,7 @@ USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_textio.ALL;
 USE IEEE.STD_LOGIC_ARITH.ALL;
 USE IEEE.STD_LOGIC_UNSIGNED.ALL;
-USE std.textio.ALL;
+USE std.textio.ALL; 
 
 ENTITY instruction_memory_initialization IS
     PORT (

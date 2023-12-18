@@ -12,7 +12,7 @@ ENTITY DataMemory IS
         data_in : IN STD_LOGIC_VECTOR(31 DOWNTO 0); -- Data input (32-bit)
         write_enable : IN STD_LOGIC; -- Write enable signal
         read_enable : IN STD_LOGIC; -- Read enable signal
-        data_out : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);-- Data output (32-bit)
+        data_out : OUT STD_LOGIC_VECTOR(31 DOWNTO 0):=(OTHERS => '0');-- Data output (32-bit)
         protect_sig : IN STD_LOGIC
     );
 END DataMemory;
@@ -34,7 +34,7 @@ BEGIN
             memory <= memory_init;
         ELSIF falling_edge(clk) THEN
             IF (write_enable = '1' AND MemoryProtection(to_integer(unsigned(address))) = '0') THEN
-                -- Big endian: store memory in the highest bits
+                -- Little endian: store memory in the highest bits
                 memory(to_integer(unsigned(address - 1))) <= data_in(15 DOWNTO 0);
                 memory(to_integer(unsigned(address))) <= data_in(31 DOWNTO 16);
             ELSIF read_enable = '1' THEN

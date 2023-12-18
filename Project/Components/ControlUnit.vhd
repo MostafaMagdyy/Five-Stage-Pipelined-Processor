@@ -71,7 +71,7 @@ BEGIN
     OUT_op <= '1' WHEN OpCode = "00101" ELSE
         '0';
     --assign of control signals 
-    AluSrc_Signal <= LDM OR ADDI OR LDD;
+    AluSrc_Signal <= '0';
     AluOpCode_Signal <= x"1" WHEN NOT_op = '1'
         ELSE
         x"4" WHEN DEC = '1'
