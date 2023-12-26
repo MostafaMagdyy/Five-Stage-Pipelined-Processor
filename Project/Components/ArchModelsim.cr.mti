@@ -1,0 +1,150 @@
+{M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/RegisterFile.vhd} {1 {vcom -work work -2002 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/RegisterFile.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity register_file
+-- Compiling architecture Behavioral of register_file
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/ALU.vhdl} {1 {vcom -work work -2002 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/ALU.vhdl}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package NUMERIC_STD
+-- Compiling entity alu_32bit
+-- Compiling architecture arch_alu_32bit of alu_32bit
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/InstructionMemoryRead.vhd} {1 {vcom -work work -2008 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/InstructionMemoryRead.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling package my_pkg
+-- Loading package my_pkg
+-- Loading package std_logic_textio
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity instruction_memory_initialization
+-- Compiling architecture arch_memory_initialization of instruction_memory_initialization
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/wb_stage.vhdl} {1 {vcom -work work -2002 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/wb_stage.vhdl}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package NUMERIC_STD
+-- Compiling entity EX_stage
+-- Compiling architecture arch_EX_stage of EX_stage
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/pipeline_registers/ID_EX_reg.vhdl} {1 {vcom -work work -2002 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/pipeline_registers/ID_EX_reg.vhdl}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity ID_EX_Reg
+-- Compiling architecture IdExReg of ID_EX_Reg
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/ControlUnit.vhd} {1 {vcom -work work -2002 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/ControlUnit.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity control_unit
+-- Compiling architecture control_unit_arc of control_unit
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/DataMemory.vhd} {2 {vcom -work work -2008 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/DataMemory.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package NUMERIC_STD
+-- Loading package my_pkg
+-- Compiling entity DataMemory
+-- Compiling architecture Behavioral of DataMemory
+** Warning: M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/DataMemory.vhd(21): (vcom-1246) Range 4095 to 0 is null.
+-- Loading package std_logic_textio
+-- Loading entity data_memory_initialization
+** Warning: M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/DataMemory.vhd(39): (vcom-1154) No index value can belong to null index range 4095 to 0.
+** Warning: M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/DataMemory.vhd(49): (vcom-1154) No index value can belong to null index range 4095 to 0.
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/wb_stage_with_reset.vhdl} {1 {vcom -work work -2002 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/wb_stage_with_reset.vhdl}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package NUMERIC_STD
+-- Compiling entity WB_stage
+-- Compiling architecture arch_WB_stage of WB_stage
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/FetchDecode.vhd} {1 {vcom -work work -2002 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/FetchDecode.vhd}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading package NUMERIC_STD
+-- Compiling entity FethcDecode
+-- Compiling architecture Behavioral of FethcDecode
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/CPU.vhdl} {1 {vcom -work work -2002 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/CPU.vhdl}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity CPU
+-- Compiling architecture CPU_arc of CPU
+-- Loading package my_pkg
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Loading entity InstructionMemory
+-- Loading entity FethcDecode
+-- Loading entity register_file
+-- Loading entity control_unit
+-- Loading entity ID_EX_Reg
+-- Loading entity alu_32bit
+-- Loading entity EX_MEM_Reg
+-- Loading entity DataMemory
+-- Loading entity MEM_WB_Reg
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/pipeline_registers/MEM_WB_reg.vhdl} {1 {vcom -work work -2002 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/pipeline_registers/MEM_WB_reg.vhdl}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity MEM_WB_Reg
+-- Compiling architecture MemWbReg of MEM_WB_Reg
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/pipeline_registers/EX_MEM_reg.vhdl} {1 {vcom -work work -2002 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/pipeline_registers/EX_MEM_reg.vhdl}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Compiling entity EX_MEM_Reg
+-- Compiling architecture ExMemReg of EX_MEM_Reg
+
+} {} {}} {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/dataMemoryRead.vhdl} {1 {vcom -work work -2008 -explicit -stats=none {M:/CMP 3rd Year/Arch/Project/CPU-Architecture/Project/Components/dataMemoryRead.vhdl}
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package my_pkg
+-- Loading package std_logic_textio
+-- Loading package std_logic_arith
+-- Loading package STD_LOGIC_UNSIGNED
+-- Compiling entity data_memory_initialization
+-- Compiling architecture data_memory_initialization of data_memory_initialization
+
+} {} {}}

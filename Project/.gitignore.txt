@@ -1,0 +1,5 @@
+Components/work/
+Components/ArchModelsim.cr.mti
+Components/ArchModelsim.mpf
+Components/data.txt
+Components/vsim.wlf
