@@ -103,7 +103,6 @@ ARCHITECTURE CPU_arc OF CPU IS
     --
     SIGNAL memory_address : STD_LOGIC_VECTOR (11 DOWNTO 0);
 
-    SIGNAL EA_E_in : STD_LOGIC_VECTOR(19 DOWNTO 0);
     --data memory
     SIGNAL data_out : STD_LOGIC_VECTOR(31 DOWNTO 0);
 
@@ -165,13 +164,13 @@ BEGIN
         ALUsrc_D => AluSrc, AluOP_D => AluOpCode, MemRead_D => MemRead, MemWrite_D => MemWrite, MemToReg_D => MemtoReg,
         RegWrite_D => RegWrite, Branch_D => Branch, OUT_D => OUT_D, Protect_D => Protect,
         Free_D => FREE_inst, SP_D => SP, PUSH_POP_D => PopPush, in_D => IN_inst, RET_CALL_D => RetCall,
-        JMP_D => JMP_inst, Rsrc1_num_D => R_src2, Rsrc2_num_D => R_src2, Rsrc1_D => ReadData1_D, Rsrc2_D => ReadData2_D, Reg_dst_D => (OTHERS => '1'), Rdst_D => R_dest,
+        JMP_D => JMP_inst, Rsrc1_num_D => R_src1, Rsrc2_num_D => R_src2, Rsrc1_D => ReadData1_D, Rsrc2_D => ReadData2_D, Reg_dst_D => (OTHERS => '1'), Rdst_D => R_dest,
         instruction => instruction,
         --outputs
         ALUsrc_E => ALUsrc_E, AluOP_E => AluOP_E, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
         MemToReg_E => MemToReg_E, RegWrite_E => RegWrite_E, Branch_E => Branch_E,
         OUT_E => OUT_E, Protect_E => Protect_E, Free_E => Free_E, SP_E => SP_E, PUSH_POP_E => PUSH_POP_E,
-        in_E => in_E, RET_CALL_E => RET_CALL_E, JMP_E => JMP_E, Rsrc1_num_E => Rsrc1_num_E, Rsrc2_num_E => Rsrc1_num_E,
+        in_E => in_E, RET_CALL_E => RET_CALL_E, JMP_E => JMP_E, Rsrc1_num_E => Rsrc1_num_E, Rsrc2_num_E => Rsrc2_num_E,
         Rsrc1_E => Rsrc1_E, Rsrc2_E => Rsrc2_E, Reg_dst_E => Reg_dst_E, Rdst_E => Rdst_E, Shift_E => Shift_E,
         Immediate_E => Immediate_E
         );
@@ -200,7 +199,7 @@ BEGIN
 
     --
     EX_MEM : ENTITY work.EX_MEM_Reg PORT MAP(en => '1', clk => clk, rst => rst, Rdst_E => Rdst_E, AluOut_E => Result,
-        EA_E => EA_E_in, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
+        EA_E =>Immediate_E , MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
         MemToReg_E => MemToReg_E, RegWrite_E => RegWrite_E, Branch_E => Branch_E,
         Protect_E => Protect_E, Free_E => Free_E, SP_E => SP_E, PUSH_POP_E => PUSH_POP_E, in_E => in_E,
         RET_CALL_E => RET_CALL_E, JMP_E => JMP_E, zero_flag_E => Zero_Reg, Reg_dst_E => Reg_dst_E,

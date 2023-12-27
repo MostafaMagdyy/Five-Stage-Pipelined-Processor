@@ -20,7 +20,6 @@ BEGIN
  PROCESS (clk)
  BEGIN
 -- Alu should be first
- IF rising_edge(clk) THEN
      iF (R_dstALU = RSrc1 or R_dstALU = Rsrc2) and (ALU_WB = '1') AND (R_dstMemory = RSrc1 or R_dstMemory = Rsrc2) and (MeM_WB = '1') THEN
             IF (R_dstMemory=RSrc1) THEN
             OUT1<=R_dstMemoryValue;
@@ -70,7 +69,6 @@ BEGIN
      ELSE
    OUT1_Sel<='0';
    OUT2_Sel<='0';
-END IF;
 END IF;
 END PROCESS;
 END Behavioral;
