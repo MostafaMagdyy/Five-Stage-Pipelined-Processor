@@ -219,7 +219,8 @@ BEGIN
         EA_M (11 DOWNTO 0);
 
     DataMemory : ENTITY work.DataMemory PORT MAP(rst => rst, clk => clk, address => memory_address, data_in => x"00000000",
-        write_enable => MemWrite_M, read_enable => MemRead_M, data_out => data_out, protect_sig => Protect_M
+        write_enable => MemWrite_M, read_enable => MemRead_M, data_out => data_out, protect_sig => Protect_M,
+        SP_Write => SP_M, Push_Pop => PUSH_POP_M, free_sig => Free_M
         );
 
     MEM_WB : ENTITY work.MEM_WB_Reg PORT MAP(en => '1', clk => clk, rst => rst, Rdst_M => Rdst_M,
