@@ -9,8 +9,8 @@ one_op_instr = {
     "NEG":      0b00010,
     "INC":      0b00011,
     "DEC":      0b00100,
-    "PUSH":     0b01001,
-    "POP":      0b01010,
+    "PUSH":     0b10001,
+    "POP":      0b10010,
     "PROTECT":  0b10110,
     "FREE":     0b10111,
     "JZ":       0b11000,
@@ -71,6 +71,8 @@ RD_SHIFT = 8
 RS1_SHIFT = 5
 RS2_SHIFT = 2
 
+def convert_to_decimal(hex_val):
+    return int(hex_val, 16)
 
 def assemble_no_op_instr(opcode):
     opcode_val = no_op_instr[opcode]
@@ -117,13 +119,11 @@ def assemble_bits_instr(opcode, Rd, immediate):
         raise ValueError(f"Unknown register: {Rd} for opcode: {opcode}")
 
     opcode_val = bits_instr[opcode]
-
+    immediate=convert_to_decimal(immediate)
     mach_code1 = (opcode_val << OPCODE_SHIFT) | (Rd_val << RD_SHIFT) | (Rd_val << RS1_SHIFT) | (immediate % 32)
     return [mach_code1]
 
-def check_segments_size(len,correct):
-    if(len!=correct):
-        raise ValueError("this instruction has "+str(len-correct)+" more segments than required") 
+
 
 def assemble_eff_addr_instr(opcode, Rd, Rs, EA):
     Rd_val = regs.get(Rd, None)
@@ -133,12 +133,16 @@ def assemble_eff_addr_instr(opcode, Rd, Rs, EA):
         raise ValueError(f"Unknown register: {Rd} for opcode: {opcode}")
 
     opcode_val = eff_addr_instr[opcode]
-
+    EA=convert_to_decimal(EA)
     mach_code1 = (opcode_val << OPCODE_SHIFT) | (
         Rd_val << RD_SHIFT) | (Rs_val << RS1_SHIFT) | (((EA&0xf0000)>> 16) << 1)
     mach_code2 = EA
     return [mach_code1, mach_code2]
 
+
+def check_segments_size(len,correct):
+    if(len!=correct):
+        raise ValueError("this instruction has "+str(len-correct)+" more segments than required") 
 
 input_file_path = input("please input instruction input file name: ") 
 output_file_path = input("please input instruction output file name: ")
@@ -181,16 +185,16 @@ try:
             elif opcode in bits_instr:
                 check_segments_size(len(segments),3)
                 machine_codes = assemble_bits_instr(
-                    opcode, segments[1], int(segments[2]))
+                    opcode, segments[1], (segments[2]))
             elif opcode in eff_addr_instr:
                 if opcode == "ADDI":
                     check_segments_size(len(segments),4)
                     machine_codes = assemble_eff_addr_instr(
-                        opcode, segments[1], segments[2], int(segments[3]))
+                        opcode, segments[1], segments[2], (segments[3]))
                 else:
                     check_segments_size(len(segments),3)
                     machine_codes = assemble_eff_addr_instr(
-                        opcode, segments[1], segments[1], int(segments[2]))
+                        opcode, segments[1], segments[1], (segments[2]))
             else:
                 raise ValueError(f"Unknown opcode: {opcode}")
 
