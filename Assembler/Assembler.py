@@ -140,11 +140,11 @@ def assemble_eff_addr_instr(opcode, Rd, Rs, EA):
     return [mach_code1, mach_code2]
 
 
-input_file_path = input("please input instruction input file name: ") 
-output_file_path = input("please input instruction output file name: ")
+input_file_path = "ISA.txt" 
+output_file_path = "Test.txt"
 
-# input_file_path = "ISA.txt" 
-# output_file_path = "Test.txt"
+# input_file_path = input("please input instruction input file name: ") 
+# output_file_path = input("please input instruction output file name: ")
 
 lineNum=0   
 curInstrcution=""
