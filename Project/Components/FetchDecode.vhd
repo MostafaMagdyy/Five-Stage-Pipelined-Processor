@@ -6,6 +6,7 @@ ENTITY FethcDecode IS
     PORT (
         rst : IN STD_LOGIC;
         clk : IN STD_LOGIC;
+        enable : IN STD_LOGIC;
         instruction : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
         instruction_out : OUT STD_LOGIC_VECTOR(15 DOWNTO 0);
         op_code : OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
@@ -26,7 +27,7 @@ BEGIN
             R_src1 <= (OTHERS => '0');
             R_src2 <= (OTHERS => '0');
             Extra_EFA <= (OTHERS => '0');
-        ELSIF rising_edge(clk) THEN
+        ELSIF rising_edge(clk) AND enable = '1' THEN
             instruction_out <= instruction;
             op_code <= instruction(15 DOWNTO 11);
             R_dest <= instruction(10 DOWNTO 8);

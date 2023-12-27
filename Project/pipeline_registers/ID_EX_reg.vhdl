@@ -30,6 +30,7 @@ ENTITY ID_EX_Reg IS
 
         -- definging output
 
+        ALUsrc_Signal : OUT STD_LOGIC;
         ALUsrc_E : OUT STD_LOGIC;
         AluOP_E : OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
         MemRead_E : OUT STD_LOGIC;
@@ -58,6 +59,7 @@ END ID_EX_Reg;
 ARCHITECTURE IdExReg OF ID_EX_Reg IS
     SIGNAL ALUsrc : STD_LOGIC;
 BEGIN
+    ALUsrc_Signal <= ALUsrc;
     PROCESS (clk, rst) IS
     BEGIN
         IF (rst = '1') THEN

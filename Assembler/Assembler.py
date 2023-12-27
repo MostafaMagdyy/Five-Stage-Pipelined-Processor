@@ -147,8 +147,8 @@ def check_segments_size(len,correct):
 input_file_path = input("please input instruction input file name: ") 
 output_file_path = input("please input instruction output file name: ")
 
-# input_file_path = "ISA.txt" 
-# output_file_path = "Test.txt"
+# input_file_path = input("please input instruction input file name: ") 
+# output_file_path = input("please input instruction output file name: ")
 
 lineNum=0   
 curInstrcution=""
