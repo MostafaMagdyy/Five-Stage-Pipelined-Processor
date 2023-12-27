@@ -33,14 +33,6 @@ BEGIN
                 memory <= (OTHERS => (OTHERS => '0'));
       -- Little endian: store memory in the highest bits
         ELSIF falling_edge(clk) THEN
-            IF( SP_Write='1' AND Push_Pop='1') THEN  --PUSH
-                memory(to_integer(unsigned(Cur_StackPointer - 1))) <= data_in(15 DOWNTO 0);
-                memory(to_integer(unsigned(Cur_StackPointer))) <= data_in(31 DOWNTO 16);
-            END IF;
-            IF(SP_Write='1' AND Push_Pop='0')  THEN --POP
-                data_out(15 DOWNTO 0) <= memory(to_integer(unsigned(Next_StackPointer - 1)));
-                data_out(31 DOWNTO 16) <= memory(to_integer(unsigned(Next_StackPointer)));
-            END IF;
             IF(write_enable = '1' AND MemoryProtection(to_integer(unsigned(address))) = '0') THEN  --STD RSrc
                 memory(to_integer(unsigned(address - 1))) <= data_in(15 DOWNTO 0);
                 memory(to_integer(unsigned(address))) <= data_in(31 DOWNTO 16);

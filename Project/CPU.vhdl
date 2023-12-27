@@ -108,8 +108,13 @@ ARCHITECTURE CPU_arc OF CPU IS
     --
     SIGNAL memory_address : STD_LOGIC_VECTOR (11 DOWNTO 0);
 
+    SIGNAL EA_E_in : STD_LOGIC_VECTOR(19 DOWNTO 0);
+    -- Stack Pointer
+    SIGNAL SP_Cur : STD_LOGIC_VECTOR(11 DOWNTO 0);
+    SIGNAL SP_Next : STD_LOGIC_VECTOR(11 DOWNTO 0);
     --data memory
     SIGNAL data_out : STD_LOGIC_VECTOR(31 DOWNTO 0);
+    SIGNAL data_in :STD_LOGIC_VECTOR(31 DOWNTO 0);
 
     SIGNAL ALU_IN_M : STD_LOGIC_VECTOR(31 DOWNTO 0);
     -- MEM_WB
@@ -231,10 +236,13 @@ BEGIN
     ALU_IN_M <= AluOut_M WHEN in_M = '0' ELSE
         IN_PORT;
 
-    memory_address <= AluOut_M(11 DOWNTO 0) WHEN Protect_M = '1' ELSE
-        EA_M (11 DOWNTO 0);
-
-    DataMemory : ENTITY work.DataMemory PORT MAP(rst => rst, clk => clk, address => memory_address, data_in => x"00000000",
+    memory_address <= Reg_dst_M(11 DOWNTO 0) WHEN Protect_M = '1' or Free_M='1' ELSE
+    SP_Cur   WHEN SP_M='1'  and PUSH_POP_M='1' ELSE  SP_Next WHEN SP_M='1' and PUSH_POP_M='0'ELSE
+    EA_M(11 DOWNTO 0);
+    data_in<= Reg_dst_M;
+    SP_Instance: ENTITY work.StackPointer PORT MAP(rst=>rst,clk=>clk,SP_Write=>SP_M,Push_Pop=>PUSH_POP_M,
+    StackPointer_Cur=>SP_Cur,StackPointer_Next=>SP_Next);
+    DataMemory : ENTITY work.DataMemory PORT MAP(rst => rst, clk => clk, address => memory_address, data_in =>data_in,
         write_enable => MemWrite_M, read_enable => MemRead_M, data_out => data_out, protect_sig => Protect_M,
         SP_Write => SP_M, Push_Pop => PUSH_POP_M, free_sig => Free_M
         );

@@ -210,6 +210,7 @@ BEGIN
         OR_op = '1' OR XOR_op = '1' OR
         BITSET = '1' OR RCL = '1' OR RCR = '1' OR
         POP = '1' OR LDD = '1' OR RET = '1' OR
+        IN_op='1' OR
         RET = '1' OR RTI = '1') ELSE
         '0';
     Branch_Signal <= '1' WHEN JZ = '1' ELSE
