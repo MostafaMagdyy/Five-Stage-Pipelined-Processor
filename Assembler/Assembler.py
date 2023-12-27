@@ -128,7 +128,7 @@ def assemble_bits_instr(opcode, Rd, immediate):
 def assemble_eff_addr_instr(opcode, Rd, Rs, EA):
     Rd_val = regs.get(Rd, None)
     Rs_val = regs.get(Rs, None)
-
+    print(opcode,Rd,Rs,EA)
     if Rd_val is None:
         raise ValueError(f"Unknown register: {Rd} for opcode: {opcode}")
 
@@ -144,21 +144,22 @@ def check_segments_size(len,correct):
     if(len!=correct):
         raise ValueError("this instruction has "+str(len-correct)+" more segments than required") 
 
-input_file_path = input("please input instruction input file name: ") 
-output_file_path = input("please input instruction output file name: ")
-
 # input_file_path = input("please input instruction input file name: ") 
 # output_file_path = input("please input instruction output file name: ")
 
+input_file_path = 'ISA.txt'
+output_file_path = 'test.txt'
+
 lineNum=0   
 curInstrcution=""
+
 try:
     if(input_file_path==output_file_path):
         raise ValueError("you can't have input and output file have the same name")
     with open(input_file_path, "r") as input_file, open(output_file_path, "w") as output_file:
+        codes=[[0]]*1000
         for line in input_file:
-            lineNum+=1
-
+            
             line =curInstrcution= line.strip().upper()
 
             if not line:
@@ -171,7 +172,10 @@ try:
 
             opcode = segments[0]
             machine_codes = None
-            if opcode in no_op_instr:
+            if opcode.lower() =='.org':
+                lineNum=int(segments[1])-1
+                continue
+            elif opcode in no_op_instr:
                 check_segments_size(len(segments),1)
                 machine_codes = assemble_no_op_instr(opcode)
             elif opcode in one_op_instr:
@@ -179,8 +183,13 @@ try:
                 machine_codes = assemble_one_op_instr(
                     opcode, segments[1])
             elif opcode in two_op_instr:
-                check_segments_size(len(segments),4)
-                machine_codes = assemble_two_op_instr(
+                if opcode == "CMP":
+                    print(len(segments))
+                    machine_codes = assemble_two_op_instr(opcode, segments[1], segments[1], segments[2])
+                    print(machine_codes)
+                else:
+                    check_segments_size(len(segments),4)
+                    machine_codes = assemble_two_op_instr(
                     opcode, segments[1], segments[2], segments[3])
             elif opcode in bits_instr:
                 check_segments_size(len(segments),3)
@@ -197,8 +206,10 @@ try:
                         opcode, segments[1], segments[1], (segments[2]))
             else:
                 raise ValueError(f"Unknown opcode: {opcode}")
-
-            for machine_code in machine_codes:
+            codes[lineNum]=machine_codes
+            lineNum+=1
+        for machine_codes in codes:
+             for machine_code in machine_codes:
                 sixteen_bit_representation = machine_code & 0xFFFF 
                 binary_sixteen_bits = bin(sixteen_bit_representation)[2:].zfill(16)  # Convert to binary and pad to 16 bits
                 # print(f"{binary_sixteen_bits}")  # Print the 16-bit binary string

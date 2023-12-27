@@ -1,4 +1,4 @@
-jmp r5
-add r3 r1 r2
-sub r4 r3 r2
-neg r4
+ldm r1 0
+ldm r2 0
+cmp r1 r2
+jz r1
