@@ -1,0 +1,35 @@
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+USE IEEE.numeric_std.ALL;
+
+ENTITY StackPointer IS
+    PORT (
+        rst: IN STD_LOGIC;
+        SP_Write, Push_Pop: IN STD_LOGIC;
+        StackPointer: OUT STD_LOGIC_VECTOR (11 DOWNTO 0)
+    );
+END StackPointer;
+
+ARCHITECTURE Behavioral OF StackPointer IS
+    SIGNAL Old_StackPointer: STD_LOGIC_VECTOR (11 DOWNTO 0) := (OTHERS => '1');
+BEGIN
+    PROCESS(SP_Write, Push_Pop, rst)
+    BEGIN
+        IF rst = '1' THEN
+            StackPointer <= (OTHERS => '1');
+            Old_StackPointer <= (OTHERS => '1');
+        ELSE
+        StackPointer<=Old_StackPointer;
+            IF SP_Write = '1' THEN
+                IF Push_Pop = '1' THEN -- Push
+                    Old_StackPointer <= std_logic_vector(unsigned(Old_StackPointer) - 2);
+                ELSE -- Pop
+                    Old_StackPointer <= std_logic_vector(unsigned(Old_StackPointer) + 2);
+                    StackPointer<= Old_StackPointer;
+                END IF;
+            END IF;
+        END IF;
+    END PROCESS;
+END Behavioral;
+
