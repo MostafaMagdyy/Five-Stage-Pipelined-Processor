@@ -58,3 +58,24 @@ force -freeze sim:/control_unit/OpCode 2'd27 0
 run
 force -freeze sim:/control_unit/OpCode 2'd28 0
 run
+
+
+
+
+
+
+
+the PopPush signal need to be 0 in POP
+
+inputs: MemRead
+	Rdst
+	Rsrc1
+	Rsrc2
+
+Outputs:ControlReset
+	IF/ID enable
+	WriteDisable
+
+
+
+
