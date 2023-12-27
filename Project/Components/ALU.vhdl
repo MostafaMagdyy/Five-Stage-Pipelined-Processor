@@ -1,23 +1,24 @@
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
-USE IEEE.STD_LOGIC_ARITH.ALL;
 USE IEEE.STD_LOGIC_UNSIGNED.ALL;
-USE IEEE.NUMERIC_STD.ALL;
-
+USE IEEE.numeric_std.ALL;
 ENTITY alu_32bit IS
     PORT (
-        reset, alu_en : IN STD_LOGIC;
+        rst, alu_en : IN STD_LOGIC;
         A, B : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
         ALUOp : IN STD_LOGIC_VECTOR(3 DOWNTO 0);
-        Result : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
-        Zero, Carry, Neg : OUT STD_LOGIC);
+        Shift : IN STD_LOGIC_VECTOR(4 DOWNTO 0);
+        zero_in, carry_in, neg_in : IN STD_LOGIC;
+
+        zero_out, carry_out, neg_out : OUT STD_LOGIC;
+        Result : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+    );
 END alu_32bit;
 
 ARCHITECTURE arch_alu_32bit OF alu_32bit IS
     SIGNAL temp : STD_LOGIC_VECTOR(32 DOWNTO 0) := (OTHERS => '0');
-    SIGNAL carry_out : STD_LOGIC;
 BEGIN
-    PROCESS (alu_en, A, B, ALUOp)
+    PROCESS (alu_en, A, B, ALUOp, Shift, zero_in, carry_in, neg_in)
     BEGIN
         IF (ALUOp /= "0000" AND alu_en = '1') THEN
             CASE ALUOp IS
@@ -52,15 +53,32 @@ BEGIN
                     -- XOR
                     temp <= ('0' & A) XOR ('0' & B);
                 WHEN "1010" =>
-                    -- RCL
-                    -- temp <= ('0' & A) + ('0' & B);
+                    REPORT "bitset";
+                    -- BITSET
+                    temp <= '0' & A(31 DOWNTO (to_integer(unsigned(Shift)) + 1)) & '1' & A((to_integer(unsigned(Shift)) - 1) DOWNTO 0);
                 WHEN "1011" =>
                     -- RCR
-                    -- temp <= ('0' & A) + ('0' & B);
+                    IF (to_integer(unsigned(Shift)) > 0) THEN
+                        temp <= A((to_integer(unsigned(Shift)) - 1) DOWNTO 0) & carry_in & A(31 DOWNTO to_integer(unsigned(Shift)));
+                    END IF;
+                WHEN "1100" =>
+                    -- RCL
+                    IF (to_integer(unsigned(Shift)) > 1) THEN
+                        temp <= A(32 - (to_integer(unsigned(Shift))) DOWNTO 0) & carry_in & A(31 DOWNTO (33 - to_integer(unsigned(Shift))));
+                    ELSIF (to_integer(unsigned(Shift)) = 1) THEN
+                        temp <= A & carry_in;
+                    ELSE
+                        temp <= carry_in & A;
+                    END IF;
                 WHEN "1101" =>
                     -- out A
                     temp <= ('0' & A);
+                WHEN "1110" =>
+                    -- out A
+                    temp <= ('0' & B);
+
                 WHEN OTHERS =>
+                    temp <= (OTHERS => '0');
                     -- Other operations (you can add more as needed)
                     -- Result <= (OTHERS => '0');
             END CASE;
@@ -69,26 +87,28 @@ BEGIN
         END IF;
     END PROCESS;
 
-    PROCESS (alu_en, temp)
+    PROCESS (alu_en, temp, rst)
     BEGIN
-        IF (alu_en = '1') THEN
+        IF (rst = '1') THEN
+            zero_out <= '0';
+            carry_out <= '0';
+            neg_out <= '0';
+            result <= (OTHERS => '0');
+        ELSIF (alu_en = '1') THEN
 
             IF temp(31 DOWNTO 0) = x"00000000" THEN
-                Zero <= '1';
+                zero_out <= '1';
             ELSE
-                Zero <= '0';
+                zero_out <= '0';
             END IF;
             -- Carry out 
             carry_out <= temp(32);
 
             -- Negative flag
-            Neg <= temp(31);
+            neg_out <= temp(31);
 
             result <= temp (31 DOWNTO 0);
 
         END IF;
     END PROCESS;
-
-    Carry <= carry_out;
-
 END arch_alu_32bit;

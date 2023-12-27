@@ -91,7 +91,7 @@ ARCHITECTURE CPU_arc OF CPU IS
 BEGIN
 
     PROCESS (clk, rst)
-    BEGIN
+        BEGIN
         IF (rst = '1') THEN
             PC <= (OTHERS => '0');
             OUT_PORT <= (OTHERS => '0');

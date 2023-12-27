@@ -11,6 +11,7 @@ ENTITY MEM_WB_Reg IS
 
         MemToReg_M : IN STD_LOGIC;
         RegWrite_M : IN STD_LOGIC;
+        in_M : IN STD_LOGIC;
 
         -- defining output
 
@@ -19,7 +20,8 @@ ENTITY MEM_WB_Reg IS
         MemOut_WB : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
 
         MemToReg_WB : OUT STD_LOGIC;
-        RegWrite_WB : OUT STD_LOGIC
+        RegWrite_WB : OUT STD_LOGIC;
+        in_WB : OUT STD_LOGIC
 
     );
 END MEM_WB_Reg;
@@ -35,6 +37,7 @@ BEGIN
 
             MemToReg_WB <= '0';
             RegWrite_WB <= '0';
+            in_WB <= '0';
 
         ELSIF (rising_edge(clk) AND en = '1') THEN
             Rdst_WB <= Rdst_M;
@@ -43,6 +46,8 @@ BEGIN
 
             MemToReg_WB <= MemToReg_M;
             RegWrite_WB <= RegWrite_M;
+            in_WB <= in_M;
+
         END IF;
 
     END PROCESS;
