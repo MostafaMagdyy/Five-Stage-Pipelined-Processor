@@ -7,7 +7,7 @@ Entity Data_Forwarding IS
 PORT (
     clk: iN STD_LOGIC;
     RSrc1,Rsrc2: IN STD_LOGIC_VECTOR( 2 DOWNTO 0);
-    ALU_DST,MeM_WB: IN STD_LOGIC;
+    ALU_WB,MeM_WB: IN STD_LOGIC;
     R_dstALU,R_dstMemory: IN STD_LOGIC_VECTOR(2 DOWNTO 0);
     R_dstALUValue,R_dstMemoryValue: IN STD_LOGIC_VECTOR( 31 DOWNTO 0);
     OUT1_Sel, OUT2_Sel: OUT STD_LOGIC;
@@ -21,7 +21,7 @@ BEGIN
  BEGIN
 -- Alu should be first
  IF rising_edge(clk) THEN
-     iF (R_dstALU = RSrc1 or R_dstALU = Rsrc2) and (ALU_DST = '1') AND (R_dstMemory = RSrc1 or R_dstMemory = Rsrc2) and (MeM_WB = '1') THEN
+     iF (R_dstALU = RSrc1 or R_dstALU = Rsrc2) and (ALU_WB = '1') AND (R_dstMemory = RSrc1 or R_dstMemory = Rsrc2) and (MeM_WB = '1') THEN
             IF (R_dstMemory=RSrc1) THEN
             OUT1<=R_dstMemoryValue;
             OUT1_Sel<='1';
@@ -45,7 +45,7 @@ BEGIN
             OUT2_Sel<='0';
             END IF;
             
-     ELSiF (R_dstALU = RSrc1 or R_dstALU = Rsrc2) and (ALU_DST = '1') then
+     ELSiF (R_dstALU = RSrc1 or R_dstALU = Rsrc2) and (ALU_WB = '1') then
                 IF R_dstALU = RSrc1 then
                     OUT1 <= R_dstALUValue;
                     OUT1_Sel<='1';
