@@ -20,7 +20,6 @@ ARCHITECTURE CPU_arc OF CPU IS
     SIGNAL R_dest : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL R_src1 : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL R_src2 : STD_LOGIC_VECTOR(2 DOWNTO 0);
-    SIGNAL Extra_EFA : STD_LOGIC_VECTOR(3 DOWNTO 0);
 
     --RegFile
     SIGNAL ReadData1_D : STD_LOGIC_VECTOR (31 DOWNTO 0);
@@ -34,8 +33,14 @@ ARCHITECTURE CPU_arc OF CPU IS
     SIGNAL MemtoReg : STD_LOGIC;
     SIGNAL RegWrite : STD_LOGIC;
     SIGNAL Branch : STD_LOGIC;
+    SIGNAL JMP_inst : STD_LOGIC;
     SIGNAL OUT_D : STD_LOGIC;
     SIGNAL Protect : STD_LOGIC;
+    SIGNAL FREE_inst : STD_LOGIC;
+    SIGNAL SP : STD_LOGIC;
+    SIGNAL PopPush : STD_LOGIC;
+    SIGNAL IN_inst : STD_LOGIC;
+    SIGNAL RetCall : STD_LOGIC;
 
     SIGNAL ControlReset : STD_LOGIC;
 
@@ -45,31 +50,47 @@ ARCHITECTURE CPU_arc OF CPU IS
     SIGNAL AluOP_E : STD_LOGIC_VECTOR(3 DOWNTO 0);
     SIGNAL MemRead_E : STD_LOGIC;
     SIGNAL MemWrite_E : STD_LOGIC;
-    SIGNAL Protect_E : STD_LOGIC;
     SIGNAL MemToReg_E : STD_LOGIC;
     SIGNAL RegWrite_E : STD_LOGIC;
     SIGNAL Branch_E : STD_LOGIC;
     SIGNAL OUT_E : STD_LOGIC;
+    SIGNAL Protect_E : STD_LOGIC;
+    SIGNAL Free_E : STD_LOGIC;
+    SIGNAL SP_E : STD_LOGIC;
+    SIGNAL PUSH_POP_E : STD_LOGIC;
+    SIGNAL in_E : STD_LOGIC;
+    SIGNAL RET_CALL_E : STD_LOGIC;
+    SIGNAL JMP_E : STD_LOGIC;
     SIGNAL Rsrc1_E : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL Rsrc2_E : STD_LOGIC_VECTOR(31 DOWNTO 0);
-    SIGNAL extra_EA_E : STD_LOGIC_VECTOR(3 DOWNTO 0);
+    SIGNAL Reg_dst_E : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL Rdst_E : STD_LOGIC_VECTOR(2 DOWNTO 0);
-
+    SIGNAL Shift_E : STD_LOGIC_VECTOR(4 DOWNTO 0);
+    SIGNAL Immediate_E : STD_LOGIC_VECTOR(19 DOWNTO 0);
     -- ALU
 
     SIGNAL Result : STD_LOGIC_VECTOR(31 DOWNTO 0);
-    SIGNAL Zero, Carry, Neg : STD_LOGIC;
+    SIGNAL Zero_Alu, Carry_Alu, Neg_Alu : STD_LOGIC;
+    SIGNAL Zero_Reg, Carry_Reg, Neg_Reg : STD_LOGIC;
     -- EX_MEM reg
 
     SIGNAL Rdst_M : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL AluOut_M : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL EA_M : STD_LOGIC_VECTOR(19 DOWNTO 0);
+
     SIGNAL MemRead_M : STD_LOGIC;
     SIGNAL MemWrite_M : STD_LOGIC;
-    SIGNAL Protect_M : STD_LOGIC;
     SIGNAL MemToReg_M : STD_LOGIC;
     SIGNAL RegWrite_M : STD_LOGIC;
     SIGNAL Branch_M : STD_LOGIC;
+    SIGNAL Protect_M : STD_LOGIC;
+    SIGNAL Free_M : STD_LOGIC;
+    SIGNAL SP_M : STD_LOGIC;
+    SIGNAL PUSH_POP_M : STD_LOGIC;
+    SIGNAL in_M : STD_LOGIC;
+    SIGNAL RET_CALL_M : STD_LOGIC;
+    SIGNAL zero_flag_M : STD_LOGIC;
+    SIGNAL Reg_dst_M : STD_LOGIC_VECTOR(31 DOWNTO 0);
 
     --
     SIGNAL memory_address : STD_LOGIC_VECTOR (11 DOWNTO 0);
@@ -85,13 +106,14 @@ ARCHITECTURE CPU_arc OF CPU IS
 
     SIGNAL MemToReg_WB : STD_LOGIC;
     SIGNAL RegWrite_WB : STD_LOGIC;
+    SIGNAL in_WB : STD_LOGIC;
 
     SIGNAL RegWriteData : STD_LOGIC_VECTOR (31 DOWNTO 0);
 
 BEGIN
 
     PROCESS (clk, rst)
-        BEGIN
+    BEGIN
         IF (rst = '1') THEN
             PC <= (OTHERS => '0');
             OUT_PORT <= (OTHERS => '0');
@@ -109,38 +131,62 @@ BEGIN
         '0';
     instruction_memory : ENTITY work.InstructionMemory PORT MAP (address => PC (11 DOWNTO 0), instruction => instruction);
     IF_ID : ENTITY work.FethcDecode PORT MAP(rst => rst, clk => clk, instruction => instruction, instruction_out => instruction_D
-        , op_code => op_code, R_dest => R_dest, R_src1 => R_src1, R_src2 => R_src2, Extra_EFA => Extra_EFA);
+        , op_code => op_code, R_dest => R_dest, R_src1 => R_src1, R_src2 => R_src2);
     RegWriteData <= AluOut_WB WHEN MemToReg_WB = '0' ELSE
         MemOut_WB;
-
+    --
+    flag_register : ENTITY work.flag_register PORT MAP (en => '1', clk => clk, rst => rst,
+        zero_in => Zero_Alu, carry_in => Carry_Alu, neg_in => Neg_Alu,
+        zero_out => Zero_Reg, carry_out => Carry_Reg, neg_out => Neg_Reg
+        );
+    --
     reg_file : ENTITY work.register_file PORT MAP (Clk => clk, Rst => rst,
         RegWrite => RegWrite_WB, WriteRegister => Rdst_WB, WriteData => RegWriteData, ReadRegister1 => R_src1,
         ReadRegister2 => R_src2, ReadData1 => ReadData1_D, ReadData2 => ReadData2_D);
+    --
     Control_unit : ENTITY work.control_unit PORT MAP (Rst => ControlReset, OpCode => op_code,
         AluSrc => AluSrc, AluOpCode => AluOpCode, MemRead => MemRead, MemWrite => MemWrite,
-        MemtoReg => MemtoReg, RegWrite => RegWrite, Branch => Branch, Protect => Protect,
-        OutPort => OUT_D
-        );
-    ID_EX : ENTITY work.ID_EX_Reg PORT MAP(en => '1', clk => clk, rst => rst,
-        ALUsrc_D => AluSrc, AluOP_D => AluOpCode, MemRead_D => MemRead, MemWrite_D => MemWrite,
-        Protect_D => Protect, MemToReg_D => MemtoReg, RegWrite_D => RegWrite, Branch_D => Branch,
-        OUT_D => OUT_D, Rsrc1_D => ReadData1_D, Rsrc2_D => ReadData2_D, extra_EA_D => Extra_EFA, Rdst_D => R_dest,
-        ALUsrc_E => ALUsrc_E, AluOP_E => AluOP_E, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
-        Protect_E => Protect_E, MemToReg_E => MemToReg_E, RegWrite_E => RegWrite_E, Branch_E => Branch_E,
-        OUT_E => OUT_E, Rsrc1_E => Rsrc1_E, Rsrc2_E => Rsrc2_E, extra_EA_E => extra_EA_E, Rdst_E => Rdst_E
+        MemtoReg => MemtoReg, RegWrite => RegWrite, Branch => Branch, JMP_inst => JMP_inst,
+        OutPort => OUT_D, Protect => Protect, FREE_inst => FREE_inst, SP => SP, PopPush => PopPush,
+        IN_inst => IN_inst, RetCall => RetCall
         );
 
-    ALU : ENTITY work.alu_32bit PORT MAP(reset => rst, alu_en => '1', A => Rsrc1_E, B => Rsrc2_E,
-        ALUOp => AluOP_E, Result => Result, Zero => Zero, Carry => Carry, Neg => Neg
+    --
+    ID_EX : ENTITY work.ID_EX_Reg PORT MAP(en => '1', clk => clk, rst => rst,
+        ALUsrc_D => AluSrc, AluOP_D => AluOpCode, MemRead_D => MemRead, MemWrite_D => MemWrite, MemToReg_D => MemtoReg,
+        RegWrite_D => RegWrite, Branch_D => Branch, OUT_D => OUT_D, Protect_D => Protect,
+        Free_D => FREE_inst, SP_D => SP, PUSH_POP_D => PopPush, in_D => IN_inst, RET_CALL_D => RetCall,
+        JMP_D => JMP_inst, Rsrc1_D => ReadData1_D, Rsrc2_D => ReadData2_D, Reg_dst_D => (OTHERS => '1'), Rdst_D => R_dest,
+        instruction => instruction,
+        --outputs
+        ALUsrc_E => ALUsrc_E, AluOP_E => AluOP_E, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
+        MemToReg_E => MemToReg_E, RegWrite_E => RegWrite_E, Branch_E => Branch_E,
+        OUT_E => OUT_E, Protect_E => Protect_E, Free_E => Free_E, SP_E => SP_E, PUSH_POP_E => PUSH_POP_E,
+        in_E => in_E, RET_CALL_E => RET_CALL_E, JMP_E => JMP_E, Rsrc1_E => Rsrc1_E,
+        Rsrc2_E => Rsrc2_E, Reg_dst_E => Reg_dst_E, Rdst_E => Rdst_E, Shift_E => Shift_E,
+        Immediate_E => Immediate_E
         );
-    EA_E_in <= instruction_D & extra_EA_E;
+
+    ALU : ENTITY work.alu_32bit PORT MAP(rst => rst, alu_en => '1',
+        A => Rsrc1_E, B => Rsrc2_E,
+        ALUOp => AluOP_E,
+        Shift => Shift_E,
+        zero_in => Zero_Reg, carry_in => Carry_Reg, neg_in => Neg_Reg,
+        zero_out => Zero_Alu, carry_out => Carry_Alu, neg_out => Neg_Alu,
+        Result => Result
+        );
 
     EX_MEM : ENTITY work.EX_MEM_Reg PORT MAP(en => '1', clk => clk, rst => rst, Rdst_E => Rdst_E, AluOut_E => Result,
-        EA_E => EA_E_in, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E, Protect_E => Protect_E,
+        EA_E => EA_E_in, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
         MemToReg_E => MemToReg_E, RegWrite_E => RegWrite_E, Branch_E => Branch_E,
+        Protect_E => Protect_E, Free_E => Free_E, SP_E => SP_E, PUSH_POP_E => PUSH_POP_E, in_E => in_E,
+        RET_CALL_E => RET_CALL_E, JMP_E => JMP_E, zero_flag_E => Zero_Reg, Reg_dst_E => Reg_dst_E,
+        --
         Rdst_M => Rdst_M, AluOut_M => AluOut_M, EA_M => EA_M,
-        MemRead_M => MemRead_M, MemWrite_M => MemWrite_M, Protect_M => Protect_M,
-        MemToReg_M => MemToReg_M, RegWrite_M => RegWrite_M, Branch_M => Branch_M
+        MemRead_M => MemRead_M, MemWrite_M => MemWrite_M,
+        MemToReg_M => MemToReg_M, RegWrite_M => RegWrite_M, Branch_M => Branch_M,
+        Protect_M => Protect_M, Free_M => Free_M, SP_M => SP_M, PUSH_POP_M => PUSH_POP_M,
+        in_M => in_M, RET_CALL_M => RET_CALL_M, zero_flag_M => zero_flag_M, Reg_dst_M => Reg_dst_M
         );
 
     memory_address <= AluOut_M(11 DOWNTO 0) WHEN Protect_M = '1' ELSE
@@ -152,6 +198,7 @@ BEGIN
 
     MEM_WB : ENTITY work.MEM_WB_Reg PORT MAP(en => '1', clk => clk, rst => rst, Rdst_M => Rdst_M,
         AluOut_M => AluOut_M, MemOut_M => data_out, MemToReg_M => MemToReg_M, RegWrite_M => RegWrite_M,
+        in_M => in_M,
         Rdst_WB => Rdst_WB, AluOut_WB => AluOut_WB, MemOut_WB => MemOut_WB, MemToReg_WB => MemToReg_WB,
-        RegWrite_WB => RegWrite_WB);
+        RegWrite_WB => RegWrite_WB, in_WB => in_WB);
 END CPU_arc;

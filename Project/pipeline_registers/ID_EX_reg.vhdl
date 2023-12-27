@@ -47,6 +47,7 @@ ENTITY ID_EX_Reg IS
         Rsrc2_E : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
         Reg_dst_E : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
         Rdst_E : OUT STD_LOGIC_VECTOR(2 DOWNTO 0);
+        Shift_E : OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
         Immediate_E : OUT STD_LOGIC_VECTOR(19 DOWNTO 0)
     );
 END ID_EX_Reg;
@@ -75,6 +76,7 @@ BEGIN
             Rsrc2_E <= (OTHERS => '0');
             Reg_dst_E <= (OTHERS => '0');
             Rdst_E <= (OTHERS => '0');
+            Shift_E <= (OTHERS => '0');
             Immediate_E <= (OTHERS => '0');
 
         ELSIF (rising_edge(clk) AND en = '1') THEN
@@ -102,6 +104,7 @@ BEGIN
                 Rsrc2_E <= Rsrc2_D;
                 Reg_dst_E <= Reg_dst_D;
                 Rdst_E <= Rdst_D;
+                Shift_E <= instruction (4 DOWNTO 0);
                 Immediate_E(3 DOWNTO 0) <= instruction(4 DOWNTO 1);
             END IF;
         END IF;
