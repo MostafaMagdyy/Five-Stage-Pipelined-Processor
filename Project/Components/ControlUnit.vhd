@@ -137,7 +137,7 @@ BEGIN
     RTI <= '1' WHEN OpCode = "11100" ELSE
         '0';
     --assign of control signals 
-    AluSrc_Signal <= '1' WHEN (ADDI = '1' OR LDM = '1' OR LDD = '1') ELSE
+    AluSrc_Signal <= '1' WHEN (ADDI = '1' OR LDM = '1' OR LDD = '1' OR STD = '1') ELSE
         '0';
     AluOpCode_Signal <= x"1" WHEN NOT_op = '1'
         ELSE

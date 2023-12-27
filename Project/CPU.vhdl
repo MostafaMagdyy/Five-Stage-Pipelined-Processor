@@ -30,6 +30,7 @@ ARCHITECTURE CPU_arc OF CPU IS
     --RegFile
     SIGNAL ReadData1_D : STD_LOGIC_VECTOR (31 DOWNTO 0);
     SIGNAL ReadData2_D : STD_LOGIC_VECTOR (31 DOWNTO 0);
+    SIGNAL DstData : STD_LOGIC_VECTOR (31 DOWNTO 0);
 
     --control unit
     SIGNAL AluSrc : STD_LOGIC;
@@ -160,7 +161,8 @@ BEGIN
 
     reg_file : ENTITY work.register_file PORT MAP (Clk => clk, Rst => rst,
         RegWrite => RegWrite_WB, WriteRegister => Rdst_WB, WriteData => RegWriteData, ReadRegister1 => R_src1,
-        ReadRegister2 => R_src2, ReadData1 => ReadData1_D, ReadData2 => ReadData2_D);
+        ReadRegister2 => R_src2, ReadData1 => ReadData1_D, ReadData2 => ReadData2_D, DstData => DstData
+        );
     --
     Control_unit : ENTITY work.control_unit PORT MAP (Rst => ControlReset, OpCode => op_code,
         AluSrc => AluSrc, AluOpCode => AluOpCode, MemRead => MemRead, MemWrite => MemWrite,
@@ -181,8 +183,8 @@ BEGIN
         ALUsrc_D => AluSrc, AluOP_D => AluOpCode, MemRead_D => MemRead, MemWrite_D => MemWrite, MemToReg_D => MemtoReg,
         RegWrite_D => RegWrite, Branch_D => Branch, OUT_D => OUT_D, Protect_D => Protect,
         Free_D => FREE_inst, SP_D => SP, PUSH_POP_D => PopPush, in_D => IN_inst, RET_CALL_D => RetCall,
-        JMP_D => JMP_inst, Rsrc1_num_D => R_src1, Rsrc2_num_D => R_src2, Rsrc1_D => ReadData1_D, Rsrc2_D => ReadData2_D, Reg_dst_D => (OTHERS => '1'), Rdst_D => R_dest,
-        instruction => instruction,
+        JMP_D => JMP_inst, Rsrc1_num_D => R_src1, Rsrc2_num_D => R_src2, Rsrc1_D => ReadData1_D, Rsrc2_D => ReadData2_D, Reg_dst_D => DstData, Rdst_D => R_dest,
+        instruction => instruction_D,
         --outputs
         ALUsrc_Signal => ALUsrc_Signal, ALUsrc_E => ALUsrc_E, AluOP_E => AluOP_E, MemRead_E => MemRead_E,
         MemWrite_E => MemWrite_E, MemToReg_E => MemToReg_E, RegWrite_E => RegWrite_E, Branch_E => Branch_E,
@@ -221,7 +223,7 @@ BEGIN
 
     --
     EX_MEM : ENTITY work.EX_MEM_Reg PORT MAP(en => '1', clk => clk, rst => rst, Rdst_E => Rdst_E, AluOut_E => Result,
-        EA_E =>Immediate_E , MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
+        EA_E => Immediate_E, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
         MemToReg_E => MemToReg_E, RegWrite_E => RegWrite_E, Branch_E => Branch_E,
         Protect_E => Protect_E, Free_E => Free_E, SP_E => SP_E, PUSH_POP_E => PUSH_POP_E, in_E => in_E,
         RET_CALL_E => RET_CALL_E, JMP_E => JMP_E, zero_flag_E => Zero_Reg, Reg_dst_E => Reg_dst_E,

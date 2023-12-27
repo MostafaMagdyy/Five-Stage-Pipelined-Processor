@@ -55,7 +55,7 @@ BEGIN
                 WHEN "1010" =>
                     REPORT "bitset";
                     -- BITSET
-                    temp <= '0' & A(31 DOWNTO (to_integer(unsigned(Shift)) + 1)) & '1' & A((to_integer(unsigned(Shift)) - 1) DOWNTO 0);
+                    temp <= A(to_integer(unsigned(Shift))) & A(31 DOWNTO (to_integer(unsigned(Shift)) + 1)) & '1' & A((to_integer(unsigned(Shift)) - 1) DOWNTO 0);
                 WHEN "1011" =>
                     -- RCR
                     IF (to_integer(unsigned(Shift)) > 0) THEN
@@ -95,20 +95,19 @@ BEGIN
             neg_out <= '0';
             result <= (OTHERS => '0');
         ELSIF (alu_en = '1') THEN
-
-            IF temp(31 DOWNTO 0) = x"00000000" THEN
-                zero_out <= '1';
-            ELSE
-                zero_out <= '0';
-            END IF;
-            -- Carry out 
-            carry_out <= temp(32);
-
-            -- Negative flag
-            neg_out <= temp(31);
-
             result <= temp (31 DOWNTO 0);
+            IF (ALUOp = "1010" OR ALUOp = "1011" OR ALUOp = "1100") THEN --bitset,rcl,rcr
+                carry_out <= temp(32);
+            ELSE
+                IF temp(31 DOWNTO 0) = x"00000000" THEN
+                    zero_out <= '1';
+                ELSE
+                    zero_out <= '0';
+                END IF;
+                -- Negative flag
+                neg_out <= temp(31);
 
+            END IF;
         END IF;
     END PROCESS;
 END arch_alu_32bit;

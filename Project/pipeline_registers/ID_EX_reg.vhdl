@@ -89,7 +89,7 @@ BEGIN
 
         ELSIF (rising_edge(clk) AND en = '1') THEN
             IF (ALUsrc = '1') THEN
-                Immediate_E(19 DOWNTO 4) <= instruction;
+                Immediate_E(15 DOWNTO 0) <= instruction;
                 ALUsrc <= '0';
             ELSE
                 ALUsrc <= ALUsrc_D;
@@ -115,7 +115,7 @@ BEGIN
                 Reg_dst_E <= Reg_dst_D;
                 Rdst_E <= Rdst_D;
                 Shift_E <= instruction (4 DOWNTO 0);
-                Immediate_E(3 DOWNTO 0) <= instruction(4 DOWNTO 1);
+                Immediate_E(19 DOWNTO 16) <= instruction(4 DOWNTO 1);
             END IF;
         END IF;
     END PROCESS;
