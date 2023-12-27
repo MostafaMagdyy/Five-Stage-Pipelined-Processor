@@ -1,18 +1,4 @@
-in R2        
-in R3        
-in R4        
-LDM R1 F5    
-PUSH R1      
-PUSH R2      
-POP R1       
-POP R2       
-STD R2 200   
-STD R1 202   
-LDD R3 202   
-LDD R4 200   
-STD R3 F5    	
-PROTECT R4
-STD R4 F5
-LDD R5 F5
-FREE R4
-LDD R5 F5
+jmp r5
+add r3 r1 r2
+sub r4 r3 r2
+neg r4
