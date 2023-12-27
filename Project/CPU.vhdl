@@ -20,6 +20,12 @@ ARCHITECTURE CPU_arc OF CPU IS
     SIGNAL R_dest : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL R_src1 : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL R_src2 : STD_LOGIC_VECTOR(2 DOWNTO 0);
+    SIGNAL OUT1_Sel : STD_LOGIC;
+    SIGNAL OUT2_Sel : STD_LOGIC;
+    SIGNAL OUT1 : STD_LOGIC_VECTOR(31 DOWNTO 0);
+    SIGNAL OUT2 : STD_LOGIC_VECTOR(31 DOWNTO 0);
+    SIGNAL A : STD_LOGIC_VECTOR(31 DOWNTO 0);
+    SIGNAL B : STD_LOGIC_VECTOR(31 DOWNTO 0);
 
     --RegFile
     SIGNAL ReadData1_D : STD_LOGIC_VECTOR (31 DOWNTO 0);
@@ -61,6 +67,8 @@ ARCHITECTURE CPU_arc OF CPU IS
     SIGNAL in_E : STD_LOGIC;
     SIGNAL RET_CALL_E : STD_LOGIC;
     SIGNAL JMP_E : STD_LOGIC;
+    SIGNAL Rsrc1_num_E : STD_LOGIC_VECTOR(2 DOWNTO 0);
+    SIGNAL Rsrc2_num_E : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL Rsrc1_E : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL Rsrc2_E : STD_LOGIC_VECTOR(31 DOWNTO 0);
     SIGNAL Reg_dst_E : STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -99,6 +107,7 @@ ARCHITECTURE CPU_arc OF CPU IS
     --data memory
     SIGNAL data_out : STD_LOGIC_VECTOR(31 DOWNTO 0);
 
+    SIGNAL ALU_IN_M : STD_LOGIC_VECTOR(31 DOWNTO 0);
     -- MEM_WB
     SIGNAL Rdst_WB : STD_LOGIC_VECTOR(2 DOWNTO 0);
     SIGNAL AluOut_WB : STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -156,26 +165,40 @@ BEGIN
         ALUsrc_D => AluSrc, AluOP_D => AluOpCode, MemRead_D => MemRead, MemWrite_D => MemWrite, MemToReg_D => MemtoReg,
         RegWrite_D => RegWrite, Branch_D => Branch, OUT_D => OUT_D, Protect_D => Protect,
         Free_D => FREE_inst, SP_D => SP, PUSH_POP_D => PopPush, in_D => IN_inst, RET_CALL_D => RetCall,
-        JMP_D => JMP_inst, Rsrc1_D => ReadData1_D, Rsrc2_D => ReadData2_D, Reg_dst_D => (OTHERS => '1'), Rdst_D => R_dest,
+        JMP_D => JMP_inst, Rsrc1_num_D => R_src2, Rsrc2_num_D => R_src2, Rsrc1_D => ReadData1_D, Rsrc2_D => ReadData2_D, Reg_dst_D => (OTHERS => '1'), Rdst_D => R_dest,
         instruction => instruction,
         --outputs
         ALUsrc_E => ALUsrc_E, AluOP_E => AluOP_E, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
         MemToReg_E => MemToReg_E, RegWrite_E => RegWrite_E, Branch_E => Branch_E,
         OUT_E => OUT_E, Protect_E => Protect_E, Free_E => Free_E, SP_E => SP_E, PUSH_POP_E => PUSH_POP_E,
-        in_E => in_E, RET_CALL_E => RET_CALL_E, JMP_E => JMP_E, Rsrc1_E => Rsrc1_E,
-        Rsrc2_E => Rsrc2_E, Reg_dst_E => Reg_dst_E, Rdst_E => Rdst_E, Shift_E => Shift_E,
+        in_E => in_E, RET_CALL_E => RET_CALL_E, JMP_E => JMP_E, Rsrc1_num_E => Rsrc1_num_E, Rsrc2_num_E => Rsrc1_num_E,
+        Rsrc1_E => Rsrc1_E, Rsrc2_E => Rsrc2_E, Reg_dst_E => Reg_dst_E, Rdst_E => Rdst_E, Shift_E => Shift_E,
         Immediate_E => Immediate_E
         );
-
+    A <= Rsrc1_E WHEN OUT1_Sel = '0' ELSE
+        OUT1;
+    B <= (x"0000" & Immediate_E(19 DOWNTO 4))WHEN ALUsrc_E = '1'ELSE
+        Rsrc2_E WHEN OUT2_Sel = '0' ELSE
+        OUT2;
     ALU : ENTITY work.alu_32bit PORT MAP(rst => rst, alu_en => '1',
-        A => Rsrc1_E, B => Rsrc2_E,
+        A => A, B => B,
         ALUOp => AluOP_E,
         Shift => Shift_E,
         zero_in => Zero_Reg, carry_in => Carry_Reg, neg_in => Neg_Reg,
         zero_out => Zero_Alu, carry_out => Carry_Alu, neg_out => Neg_Alu,
         Result => Result
         );
+    --
 
+    FORWARDING_UNIT : ENTITY work.Data_Forwarding PORT MAP(clk => clk,
+        RSrc1 => Rsrc1_num_E, Rsrc2 => Rsrc2_num_E,
+        ALU_WB => RegWrite_M, MeM_WB => RegWrite_WB,
+        R_dstALU => Rdst_M, R_dstMemory => Rdst_WB,
+        R_dstALUValue => ALU_IN_M, R_dstMemoryValue => RegWriteData,
+        OUT1_Sel => OUT1_Sel, OUT2_Sel => OUT2_Sel, OUT1 => OUT1, OUT2 => OUT2
+        );
+
+    --
     EX_MEM : ENTITY work.EX_MEM_Reg PORT MAP(en => '1', clk => clk, rst => rst, Rdst_E => Rdst_E, AluOut_E => Result,
         EA_E => EA_E_in, MemRead_E => MemRead_E, MemWrite_E => MemWrite_E,
         MemToReg_E => MemToReg_E, RegWrite_E => RegWrite_E, Branch_E => Branch_E,
@@ -189,6 +212,9 @@ BEGIN
         in_M => in_M, RET_CALL_M => RET_CALL_M, zero_flag_M => zero_flag_M, Reg_dst_M => Reg_dst_M
         );
 
+    ALU_IN_M <= AluOut_M WHEN in_M = '0' ELSE
+        IN_PORT;
+
     memory_address <= AluOut_M(11 DOWNTO 0) WHEN Protect_M = '1' ELSE
         EA_M (11 DOWNTO 0);
 
@@ -197,7 +223,7 @@ BEGIN
         );
 
     MEM_WB : ENTITY work.MEM_WB_Reg PORT MAP(en => '1', clk => clk, rst => rst, Rdst_M => Rdst_M,
-        AluOut_M => AluOut_M, MemOut_M => data_out, MemToReg_M => MemToReg_M, RegWrite_M => RegWrite_M,
+        AluOut_M => ALU_IN_M, MemOut_M => data_out, MemToReg_M => MemToReg_M, RegWrite_M => RegWrite_M,
         in_M => in_M,
         Rdst_WB => Rdst_WB, AluOut_WB => AluOut_WB, MemOut_WB => MemOut_WB, MemToReg_WB => MemToReg_WB,
         RegWrite_WB => RegWrite_WB, in_WB => in_WB);

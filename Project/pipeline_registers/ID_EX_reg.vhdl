@@ -20,6 +20,8 @@ ENTITY ID_EX_Reg IS
         in_D : IN STD_LOGIC;
         RET_CALL_D : IN STD_LOGIC;
         JMP_D : IN STD_LOGIC;
+        Rsrc1_num_D : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+        Rsrc2_num_D : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
         Rsrc1_D : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
         Rsrc2_D : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
         Reg_dst_D : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -43,6 +45,8 @@ ENTITY ID_EX_Reg IS
         in_E : OUT STD_LOGIC;
         RET_CALL_E : OUT STD_LOGIC;
         JMP_E : OUT STD_LOGIC;
+        Rsrc1_num_E : OUT STD_LOGIC_VECTOR(2 DOWNTO 0);
+        Rsrc2_num_E : OUT STD_LOGIC_VECTOR(2 DOWNTO 0);
         Rsrc1_E : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
         Rsrc2_E : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
         Reg_dst_E : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -72,6 +76,8 @@ BEGIN
             in_E <= '0';
             RET_CALL_E <= '0';
             JMP_E <= '0';
+            Rsrc1_num_E <= (OTHERS => '0');
+            Rsrc2_num_E <= (OTHERS => '0');
             Rsrc1_E <= (OTHERS => '0');
             Rsrc2_E <= (OTHERS => '0');
             Reg_dst_E <= (OTHERS => '0');
@@ -100,6 +106,8 @@ BEGIN
                 in_E <= in_D;
                 RET_CALL_E <= RET_CALL_D;
                 JMP_E <= JMP_D;
+                Rsrc1_num_E <= Rsrc1_num_D;
+                Rsrc2_num_E <= Rsrc2_num_D;
                 Rsrc1_E <= Rsrc1_D;
                 Rsrc2_E <= Rsrc2_D;
                 Reg_dst_E <= Reg_dst_D;
